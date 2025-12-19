@@ -1,0 +1,14 @@
+# XAMPP
+/.vscode/
+/.idea/
+/node_modules/
+
+# Database config
+connect.php
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

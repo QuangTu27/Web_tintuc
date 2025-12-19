@@ -3,8 +3,6 @@
 /.idea/
 /node_modules/
 
-# Database config
-connect.php
 
 # Logs
 *.log

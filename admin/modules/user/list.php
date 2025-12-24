@@ -11,7 +11,9 @@ $result = mysqli_query($conn, $sql);
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/Web_tintuc/admin/css/style_admin.css">
     <title>Danh sách người dùng</title>
+
 </head>
 
 <body>
@@ -22,7 +24,7 @@ $result = mysqli_query($conn, $sql);
         <a href="index.php?mod=user&act=add">➕ Thêm người dùng</a>
     </p>
 
-    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <table>
         <tr>
             <th>ID</th>
             <th>Username</th>

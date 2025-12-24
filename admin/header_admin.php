@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ thống Quản trị Tin Tức</title>
-    <link rel="stylesheet" href="/Web_tintuc/admin/style_admin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/Web_tintuc/admin/css/style_admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 
 <body>
@@ -17,11 +17,15 @@
             </div>
             <ul class="menu">
                 <li><a href="index.php"><i class="fas fa-home"></i> Trang chủ</a></li>
+
                 <li><a href="index.php?mod=tintuc&act=list"><i class="fas fa-newspaper"></i> Quản lý Tin tức</a></li>
                 <li><a href="index.php?mod=danhmuc&act=list"><i class="fas fa-list"></i> Quản lý Danh mục</a></li>
                 <li><a href="index.php?mod=binhluan&act=list"><i class="fas fa-comments"></i> Bình luận</a></li>
                 <li><a href="index.php?mod=user&act=list"><i class="fas fa-users"></i> Thành viên</a></li>
-                <li><a href="login.php?logout=1" class="logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+
+                <li><a href="index.php?mod=quangcao&act=list"><i class="fas fa-ad"></i> Quản lý Quảng cáo</a></li>
+
+                <li><a href="index.php?act=logout" class="logout" onclick="return confirm('Bạn có chắc muốn đăng xuất?');"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
             </ul>
         </nav>
 

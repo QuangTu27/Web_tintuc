@@ -32,7 +32,6 @@ if (isset($_POST['btn_update'])) {
     $email = trim($_POST['email']);
     $role  = $_POST['role'];
 
-    // Nếu có nhập mật khẩu mới
     if (!empty($_POST['password'])) {
         $password = $_POST['password'];
         $sqlUpdate = "
@@ -44,7 +43,6 @@ if (isset($_POST['btn_update'])) {
             WHERE id=$id
         ";
     } else {
-        // Không đổi mật khẩu
         $sqlUpdate = "
             UPDATE tbl_users 
             SET hoten='$hoten',
@@ -55,54 +53,60 @@ if (isset($_POST['btn_update'])) {
     }
 
     mysqli_query($conn, $sqlUpdate);
-
     header("Location: index.php?mod=user&act=list");
     exit;
 }
 ?>
 
-<h2 class="admin-title">CẬP NHẬT NGƯỜI DÙNG</h2>
+<div class="admin-container">
 
-<form method="post" class="admin-form">
+    <a href="index.php?mod=user&act=list" class="btn btn_back">
+        Quay lại
+    </a>
+    <h2 class="admin-title">
+        Cập nhật người dùng
+    </h2>
 
-    <div class="form-group">
-        <label>Username</label>
-        <input type="text" value="<?= $user['username'] ?>" disabled>
-    </div>
+    <form method="post" class="admin-form">
 
-    <div class="form-group">
-        <label>Mật khẩu mới</label>
-        <input type="password" name="password">
-        <small class="form-note">(Bỏ trống nếu không đổi)</small>
-    </div>
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" value="<?= $user['username'] ?>" disabled>
+        </div>
 
-    <div class="form-group">
-        <label>Họ tên</label>
-        <input type="text" name="hoten" value="<?= $user['hoten'] ?>" required>
-    </div>
+        <div class="form-group">
+            <label>Mật khẩu mới</label>
+            <input type="password" name="password">
+            <small class="form-note">Bỏ trống nếu không đổi</small>
+        </div>
 
-    <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="email" value="<?= $user['email'] ?>" required>
-    </div>
+        <div class="form-group">
+            <label>Họ tên</label>
+            <input type="text" name="hoten" value="<?= $user['hoten'] ?>" required>
+        </div>
 
-    <div class="form-group">
-        <label>Quyền</label>
-        <select name="role">
-            <option value="user" <?= $user['role'] == 'user' ? 'selected' : '' ?>>User</option>
-            <option value="admin" <?= $user['role'] == 'admin' ? 'selected' : '' ?>>Admin</option>
-        </select>
-    </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" value="<?= $user['email'] ?>" required>
+        </div>
 
-    <div class="form-actions">
-        <button type="submit" name="btn_update" class="btn btn-primary">
-            💾 Cập nhật
-        </button>
+        <div class="form-group">
+            <label>Quyền</label>
+            <select name="role">
+                <option value="user" <?= $user['role'] == 'user' ? 'selected' : '' ?>>User</option>
+                <option value="admin" <?= $user['role'] == 'admin' ? 'selected' : '' ?>>Admin</option>
+            </select>
+        </div>
 
-        <a href="/Web_tintuc/admin/index.php?mod=user&act=list"
-            class="btn btn-secondary">
-            ⬅ Quay lại
-        </a>
-    </div>
+        <div class="form-actions">
+            <button type="submit" name="btn_update" class="btn btn-primary">
+                💾 Cập nhật
+            </button>
+            <a href="index.php?mod=user&act=list" class="btn btn-secondary">
+                Huỷ
+            </a>
+        </div>
 
-</form>
+    </form>
+
+</div>

@@ -2,7 +2,6 @@
 // Kết nối CSDL
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
-
 // Xử lý khi submit form
 if (isset($_POST['btn_add'])) {
     $username = $_POST['username'];
@@ -15,64 +14,67 @@ if (isset($_POST['btn_add'])) {
     $result = mysqli_query($conn, $check);
 
     if (mysqli_num_rows($result) > 0) {
-        echo "<p style='color:red'>Username đã tồn tại</p>";
+        $error = "Username đã tồn tại";
     } else {
         $sql = "INSERT INTO tbl_users(username, password, hoten, email, role)
                 VALUES ('$username', '$password', '$hoten', '$email', '$role')";
         mysqli_query($conn, $sql);
-        echo "<p style='color:green'>Thêm user thành công</p>";
         header('Location: index.php?mod=user&act=list');
         exit();
     }
 }
 ?>
 
+<div class="admin-container">
+    <a href="index.php?mod=user&act=list" class="btn btn_back">
+        Quay lại
+    </a>
+    <h2 class="admin-title">
+        Thêm người dùng
+    </h2>
 
+    <?php if (isset($error)) { ?>
+        <p class="form-error"><?= $error ?></p>
+    <?php } ?>
 
-<h2>Thêm người dùng</h2>
+    <form method="post" class="admin-form">
 
-<?php if (isset($error)) { ?>
-    <p style="color:red"><?= $error ?></p>
-<?php } ?>
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" required>
+        </div>
 
-<form method="post">
-    <table cellpadding="5">
-        <tr>
-            <td>Username</td>
-            <td><input type="text" name="username" required></td>
-        </tr>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" required>
+        </div>
 
-        <tr>
-            <td>Password</td>
-            <td><input type="password" name="password" required></td>
-        </tr>
+        <div class="form-group">
+            <label>Họ tên</label>
+            <input type="text" name="hoten">
+        </div>
 
-        <tr>
-            <td>Họ tên</td>
-            <td><input type="text" name="hoten"></td>
-        </tr>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email">
+        </div>
 
-        <tr>
-            <td>Email</td>
-            <td><input type="email" name="email"></td>
-        </tr>
+        <div class="form-group">
+            <label>Quyền</label>
+            <select name="role">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
 
-        <tr>
-            <td>Quyền</td>
-            <td>
-                <select name="role">
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                </select>
-            </td>
-        </tr>
+        <div class="form-actions">
+            <button type="submit" name="btn_add" class="btn btn-primary">
+                Thêm user
+            </button>
+            <a href="index.php?mod=user&act=list" class="btn btn-secondary">
+                Huỷ
+            </a>
+        </div>
 
-        <tr>
-            <td></td>
-            <td>
-                <button type="submit" name="btn_add">Thêm user</button>
-                <a href="index.php?mod=user&act=list">Quay lại</a>
-            </td>
-        </tr>
-    </table>
-</form>
+    </form>
+</div>

@@ -3,6 +3,17 @@ session_start();
 // 1. Gọi file kết nối CSDL (ra ngoài 1 cấp thư mục)
 include '../connect.php';
 
+if (isset($_GET['act']) && $_GET['act'] == 'logout') {
+    // Xóa toàn bộ session
+    session_destroy();
+    // Hoặc xóa từng cái nếu muốn giữ lại setting khác:
+    // unset($_SESSION['admin_login']);
+
+    // Chuyển hướng về trang đăng nhập
+    header('location: login.php');
+    exit();
+}
+
 // 2. KIỂM TRA BẢO MẬT (Chặn không cho vào nếu chưa đăng nhập)
 // Nếu chưa có session 'admin_login', đá về trang login ngay
 if (!isset($_SESSION['admin_login'])) {

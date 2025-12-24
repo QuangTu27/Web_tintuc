@@ -1,0 +1,43 @@
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-block;
+}
+
+.btn-add {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-edit {
+  background-color: #ffc107;
+  color: black;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn_back {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #0069d9;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: #fff;
+}

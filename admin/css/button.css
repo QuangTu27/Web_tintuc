@@ -9,13 +9,22 @@
 }
 
 .btn-add {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 15px;
   background-color: #28a745;
   color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+.btn-add:hover {
+  background-color: #218838;
 }
 
 .btn-edit {
   background-color: #ffc107;
   color: black;
+  margin-right: 10px;
 }
 
 .btn-delete {
@@ -28,16 +37,25 @@
   color: white;
 }
 
-.btn-primary {
+.btn-OK {
   background: #007bff;
   color: #fff;
 }
-
-.btn-primary:hover {
+.btn-OK:hover {
   background: #0069d9;
 }
 
-.btn-secondary {
-  background: #6c757d;
-  color: #fff;
+.btn-Cancel {
+  background-color: #dc3545;
+  color: white;
+}
+.btn-Cancel:hover {
+  background-color: #c82333;
+}
+
+.btn-group-center {
+  display: flex;
+  justify-content: center; /* căn giữa ngang */
+  gap: 15px; /* khoảng cách giữa 2 nút */
+  margin-top: 30px;
 }

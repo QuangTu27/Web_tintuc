@@ -6,60 +6,100 @@ $sql = "SELECT * FROM tbl_users ORDER BY id ASC";
 $result = mysqli_query($conn, $sql);
 ?>
 
-<!DOCTYPE html>
-<html lang="vi">
+<h2 class="admin-title">QUẢN LÝ TÀI KHOẢN</h2>
+<form method="post"
+    action="index.php?mod=user&act=delete"
+    onsubmit="return confirm('Bạn có chắc muốn xoá các user đã chọn?')">
 
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="/Web_tintuc/admin/css/style_admin.css">
-    <title>Danh sách người dùng</title>
-
-</head>
-
-<body>
-
-    <h2>DANH SÁCH NGƯỜI DÙNG</h2>
-
-    <p>
-        <a href="index.php?mod=user&act=add">➕ Thêm người dùng</a>
+    <p class="list-actions">
+        <a href="index.php?mod=user&act=add" class="btn btn-add">➕ Thêm người dùng</a>
+        <button type="submit"
+            id="btnDeleteSelected"
+            class="btn btn-delete"
+            disabled>
+            🗑️ Xoá 0 user
+        </button>
     </p>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Họ tên</th>
-            <th>Email</th>
-            <th>Quyền</th>
-            <th>Thao tác</th>
-        </tr>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" id="checkAll">
+                </th>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Quyền</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
 
-        <?php
-        if (mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-        ?>
+        <tbody>
+            <?php if (mysqli_num_rows($result) > 0): ?>
+                <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                    <tr>
+                        <td>
+                            <input type="checkbox"
+                                name="ids[]"
+                                value="<?= $row['id'] ?>">
+                        </td>
+                        <td><?= $row['id'] ?></td>
+                        <td><?= htmlspecialchars($row['username']) ?></td>
+                        <td><?= htmlspecialchars($row['hoten']) ?></td>
+                        <td><?= htmlspecialchars($row['email']) ?></td>
+                        <td><?= $row['role'] ?></td>
+                        <td>
+                            <a class="btn btn-edit"
+                                href="index.php?mod=user&act=edit&id=<?= $row['id'] ?>">
+                                ✏️ Sửa
+                            </a>
+
+                            <a class="btn btn-delete"
+                                href="index.php?mod=user&act=delete&id=<?= $row['id'] ?>"
+                                onclick="return confirm('Bạn có chắc muốn xoá user này?')">
+                                🗑️ Xoá
+                            </a>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            <?php else: ?>
                 <tr>
-                    <td><?= $row['id'] ?></td>
-                    <td><?= $row['username'] ?></td>
-                    <td><?= $row['hoten'] ?></td>
-                    <td><?= $row['email'] ?></td>
-                    <td><?= $row['role'] ?></td>
                     <td>
-                        <a href="index.php?mod=user&act=edit&id=<?= $row['id'] ?>">✏️ Sửa</a> |
-                        <a href="index.php?mod=user&act=delete&id=<?= $row['id'] ?>"
-                            onclick="return confirm('Bạn có chắc muốn xoá user này?')">
-                            🗑️ Xoá
-                        </a>
+                        Chưa có người dùng nào
                     </td>
                 </tr>
-        <?php
-            }
-        } else {
-            echo "<tr><td colspan='7'>Chưa có người dùng nào</td></tr>";
-        }
-        ?>
+            <?php endif; ?>
+        </tbody>
     </table>
+</form>
 
-</body>
+<script>
+    const checkAll = document.getElementById('checkAll');
+    const checkboxes = document.querySelectorAll('input[name="ids[]"]');
+    const btnDelete = document.getElementById('btnDeleteSelected');
 
-</html>
+    function updateDeleteButton() {
+        const checkedCount = document.querySelectorAll('input[name="ids[]"]:checked').length;
+
+        if (checkedCount > 0) {
+            btnDelete.disabled = false;
+            btnDelete.innerHTML = `🗑️ Xoá ${checkedCount} user`;
+        } else {
+            btnDelete.disabled = true;
+            btnDelete.innerHTML = `🗑️ Xoá 0 user`;
+        }
+    }
+
+    // Chọn / bỏ chọn tất cả
+    checkAll.addEventListener('change', function() {
+        checkboxes.forEach(cb => cb.checked = this.checked);
+        updateDeleteButton();
+    });
+
+    // Tick từng checkbox
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateDeleteButton);
+    });
+</script>

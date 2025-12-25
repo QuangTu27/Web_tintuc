@@ -10,3 +10,54 @@
 body {
   background-color: #f4f6f9;
 }
+
+/* 1. Thiết lập chiều cao cố định cho toàn trang để không bị cuộn body */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden; /* Ẩn thanh cuộn của trình duyệt */
+}
+
+/* 2. Wrapper bao quanh: Dàn trang ngang (Sidebar - Main) */
+.wrapper {
+  display: flex;
+  height: 100vh; /* Chiều cao bằng 100% màn hình thiết bị */
+  width: 100%;
+}
+
+/* 3. Sidebar: Cố định bên trái, menu dài quá thì tự cuộn riêng */
+.sidebar {
+  width: 250px;
+  height: 100%; /* Full chiều cao */
+  background-color: #343a40;
+  color: white;
+  flex-shrink: 0; /* Không bị co lại khi màn hình nhỏ */
+  overflow-y: auto; /* Nếu menu dài quá màn hình thì hiện thanh cuộn riêng */
+}
+
+/* 4. Main Content: Khu vực bên phải (Gồm Header + Content Body) */
+.main-content {
+  flex: 1; /* Chiếm hết phần rộng còn lại */
+  display: flex; /* Biến nó thành flex container dọc */
+  flex-direction: column; /* Xếp Header lên trên, Body xuống dưới */
+  height: 100%; /* Full chiều cao màn hình */
+  overflow: hidden; /* Ẩn thanh cuộn tổng của khu vực này */
+}
+
+/* 5. Top Bar (Header): Cố định ở trên */
+.top-bar {
+  background-color: white;
+  padding: 15px 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0; /* Quan trọng: Giữ nguyên chiều cao, không bị co */
+  z-index: 10; /* Nổi lên trên nội dung khi cuộn */
+}
+
+/* 6. Content Body: Phần nội dung chính (Form, Table...) - SẼ CUỘN Ở ĐÂY */
+.content-body {
+  flex: 1; /* Tự động giãn để lấp đầy khoảng trống còn lại bên dưới Header */
+  overflow-y: auto; /* QUAN TRỌNG: Chỉ hiện thanh cuộn ở khu vực này */
+  padding: 30px; /* Padding nội dung */
+  background-color: #f4f6f9;
+}

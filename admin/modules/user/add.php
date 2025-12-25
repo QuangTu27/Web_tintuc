@@ -26,8 +26,8 @@ if (isset($_POST['btn_add'])) {
 ?>
 
 <div class="admin-container">
-    <a href="index.php?mod=user&act=list" class="btn btn_back">
-        Quay lại
+    <a href="index.php?mod=user&act=list" class="btn btn-Cancel">
+        ⬅ Quay lại
     </a>
     <h2 class="admin-title">
         Thêm người dùng
@@ -67,11 +67,11 @@ if (isset($_POST['btn_add'])) {
             </select>
         </div>
 
-        <div class="form-actions">
-            <button type="submit" name="btn_add" class="btn btn-primary">
-                Thêm user
+        <div class="btn-group-center">
+            <button type="submit" name="btn_add" class="btn btn-OK">
+                Thêm người dùng
             </button>
-            <a href="index.php?mod=user&act=list" class="btn btn-secondary">
+            <a href="index.php?mod=user&act=list" class="btn btn-Cancel">
                 Huỷ
             </a>
         </div>

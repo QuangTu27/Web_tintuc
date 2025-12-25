@@ -26,26 +26,35 @@ if (isset($_POST['btn_add'])) {
     }
 }
 ?>
-<div>
-    <h2>
-        <a href="index.php?mod=danhmuc&act=list">
-            <i class="btn_back"></i> Quay lại
-        </a>
-    </h2>
-</div>
-<h2>Thêm danh mục</h2>
-<?php if (isset($error)) { ?>
-    <p style="color:red"><?= $error ?></p>
-<?php } ?>
-<form method="post">
-    <table cellpadding="5">
-        <tr>
-            <td>Tên danh mục</td>
-            <td><input type="text" name="name" required></td>
-        </tr>
+<div class="admin-container">
+    <a href="index.php?mod=danhmuc&act=list" class="btn btn-Cancel">
+        ⬅ Quay lại
+    </a>
 
-        <tr>
-            <td></td>
-            <td><button type="submit" name="btn_add">Thêm danh mục</button></td>
-        </tr>
-    </table>
+    <h2 class="admin-title">Thêm danh mục</h2>
+
+    <?php if (isset($error)) { ?>
+        <p style="color:red; margin-bottom:15px;">
+            <?= $error ?>
+        </p>
+    <?php } ?>
+
+    <form method="post" class="admin-form">
+
+        <div class="form-group">
+            <label>Tên danh mục</label>
+            <input type="text" name="name" required>
+        </div>
+
+        <div class="btn-group-center">
+            <button type="submit" name="btn_add" class="btn btn-OK">
+                Thêm danh mục
+            </button>
+
+            <a href="index.php?mod=danhmuc&act=list" class="btn btn-Cancel">
+                Huỷ
+            </a>
+        </div>
+
+    </form>
+</div>

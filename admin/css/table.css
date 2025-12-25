@@ -16,3 +16,15 @@ th {
   background-color: #007bff;
   color: white;
 }
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+.ads-image {
+  text-align: center;
+}
+
+.ads-image img {
+  width: 100px;
+  height: auto;
+  border-radius: 4px;
+}

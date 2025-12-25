@@ -60,7 +60,7 @@ if (isset($_POST['btn_update'])) {
 
 <div class="admin-container">
 
-    <a href="index.php?mod=user&act=list" class="btn btn_back">
+    <a href="index.php?mod=user&act=list" class="btn btn-Cancel">
         Quay lại
     </a>
     <h2 class="admin-title">
@@ -98,11 +98,11 @@ if (isset($_POST['btn_update'])) {
             </select>
         </div>
 
-        <div class="form-actions">
-            <button type="submit" name="btn_update" class="btn btn-primary">
+        <div class="btn-group-center">
+            <button type="submit" name="btn_update" class="btn btn-OK">
                 💾 Cập nhật
             </button>
-            <a href="index.php?mod=user&act=list" class="btn btn-secondary">
+            <a href="index.php?mod=user&act=list" class="btn btn-Cancel">
                 Huỷ
             </a>
         </div>

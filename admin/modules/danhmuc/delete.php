@@ -1,6 +1,8 @@
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
-
+if ($_SESSION['admin_role'] !== 'admin') {
+    die('Bạn không có quyền thao tác danh mục');
+}
 // Xử lý xoá dm đơn lẻ
 if (isset($_GET['id'])) {
     $id = $_GET['id'];

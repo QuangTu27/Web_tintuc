@@ -34,6 +34,11 @@ body {
   color: white;
   flex-shrink: 0; /* Không bị co lại khi màn hình nhỏ */
   overflow-y: auto; /* Nếu menu dài quá màn hình thì hiện thanh cuộn riêng */
+  display: flex;
+  flex-direction: column;
+}
+.menu {
+  flex: 1;
 }
 
 /* 4. Main Content: Khu vực bên phải (Gồm Header + Content Body) */
@@ -60,4 +65,82 @@ body {
   overflow-y: auto; /* QUAN TRỌNG: Chỉ hiện thanh cuộn ở khu vực này */
   padding: 30px; /* Padding nội dung */
   background-color: #f4f6f9;
+}
+
+.user-dropdown {
+  position: relative;
+  padding: 15px;
+  border-top: 1px solid #333;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.user-info img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.user-name {
+  font-weight: 600;
+}
+
+.user-role {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.user-menu {
+  position: absolute;
+  bottom: 70px;
+  left: 15px;
+  width: 200px;
+  background: #222;
+  border-radius: 6px;
+  list-style: none;
+  padding: 0;
+  display: none;
+}
+
+.user-menu li a {
+  padding: 10px 15px;
+  display: block;
+  color: #fff;
+  text-decoration: none;
+}
+
+.user-menu li a:hover {
+  background: #007bff;
+}
+
+.profile-form {
+  max-width: 420px;
+}
+
+.avatar-box {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.avatar-box img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #007bff;
 }

@@ -62,8 +62,10 @@ if (isset($_POST['btn_add'])) {
         <div class="form-group">
             <label>Quyền</label>
             <select name="role">
+                <option value="editor">Editor</option>
+                <option value="phongvien">Phóng viên</option>
+                <option value="ctv">Cộng tác viên</option>
                 <option value="user">User</option>
-                <option value="admin">Admin</option>
             </select>
         </div>
 

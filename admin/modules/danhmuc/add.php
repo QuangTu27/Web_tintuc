@@ -1,7 +1,9 @@
 <?php
 // Kết nối CSDL
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
-
+if ($_SESSION['admin_role'] !== 'admin') {
+    die('Bạn không có quyền thao tác danh mục');
+}
 // Xử lý khi submit form
 if (isset($_POST['btn_add'])) {
     $name = trim($_POST['name']);

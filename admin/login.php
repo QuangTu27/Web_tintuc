@@ -17,7 +17,7 @@ if (isset($_POST['btn_login'])) {
     // LƯU Ý QUAN TRỌNG:
     // 1. Tên bảng phải là 'tbl_users' (như trong hình bạn gửi)
     // 2. Cột role phải so sánh với chữ 'admin'
-    $sql = "SELECT * FROM tbl_users WHERE username = '$u' AND password = '$p' AND role = 'admin'";
+    $sql = "SELECT * FROM tbl_users WHERE username = '$u' AND password = '$p' AND role IN ('admin', 'editor', 'phongvien', 'ctv')";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
@@ -26,9 +26,11 @@ if (isset($_POST['btn_login'])) {
         $_SESSION['admin_login'] = true;
         $_SESSION['admin_name'] = $row['hoten'];
         $_SESSION['admin_id'] = $row['id'];
-
+        $_SESSION['admin_role']   = $row['role'];
+        $_SESSION['admin_avatar'] = $row['avatar'];
         // Chuyển hướng vào trang quản trị chính
         header('location: index.php');
+        exit();
     } else {
         $error = "Sai tài khoản, mật khẩu hoặc bạn không phải Admin!";
     }

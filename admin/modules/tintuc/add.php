@@ -10,18 +10,18 @@ if (isset($_POST['btn_them'])) {
     // Xử lý File Ảnh
     $hinhanh = $_FILES['hinhanh']['name'];
     $hinhanh_tmp = $_FILES['hinhanh']['tmp_name'];
-    
+
     // Đổi tên ảnh theo thời gian để không bị trùng file trong thư mục
     $hinhanh_name = time() . '_' . $hinhanh;
 
     // Câu lệnh SQL (đúng các cột trong ảnh DB mày gửi)
     $sql_add = "INSERT INTO tbl_news (tieude, tomtat, noidung, hinhanh, ngaydang, category_id) 
                 VALUES ('$tieude', '$tomtat', '$noidung', '$hinhanh_name', NOW(), '$cat_id')";
-    
+
     if (mysqli_query($conn, $sql_add)) {
         // Nếu lưu DB thành công thì mới đẩy ảnh vào thư mục
         move_uploaded_file($hinhanh_tmp, "../images/news/" . $hinhanh_name);
-        
+
         echo "<script>alert('Thêm bài viết thành công!'); window.location.href='index.php?mod=tintuc&act=list';</script>";
     } else {
         echo "<h3 style='color:red;'>Lỗi truy vấn: " . mysqli_error($conn) . "</h3>";
@@ -29,7 +29,7 @@ if (isset($_POST['btn_them'])) {
 }
 ?>
 
-<div style="padding: 20px; background: #white;">
+<div style="padding: 20px; background: #f8f9fa;">
     <h2>➕ Thêm Bài Viết Mới</h2>
     <form method="POST" enctype="multipart/form-data" style="max-width: 800px; border: 1px solid #ccc; padding: 20px;">
         <p><b>Tiêu đề bài viết:</b></p>

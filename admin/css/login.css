@@ -4,41 +4,57 @@ body.login-page {
   align-items: center;
   height: 100vh;
   background: #f0f2f5;
+  font-family: "Segoe UI", sans-serif; /* Thêm font cho đẹp */
 }
 
 .login-box {
   background: white;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 350px;
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: 450px;
   text-align: center;
 }
 
 .login-box h2 {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  font-size: 32px;
+  color: #333;
 }
 
 .login-box input {
   width: 100%;
-  padding: 12px;
-  margin: 10px 0;
+  padding: 15px;
+  margin: 12px 0;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
 }
 
 .login-box button {
   width: 100%;
-  padding: 12px;
+  padding: 15px;
   background: #007bff;
   color: white;
-  border-radius: 4px;
+  border: none;
+  border-radius: 6px;
   font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s;
+}
+
+.login-box button:hover {
+  background: #0056b3;
 }
 
 .login-box .error {
-  color: red;
-  background: #ffe6e6;
-  padding: 10px;
-  margin-bottom: 15px;
+  color: #721c24;
+  background: #f8d7da;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  border: 1px solid #f5c6cb;
 }

@@ -3,6 +3,22 @@ session_start();
 // Kết nối CSDL
 include 'connect.php';
 
+//xử lý đăng xuất
+if (isset($_GET['act']) && $_GET['act'] == 'logout') {
+    // Xóa tất cả các biến session
+    session_unset();
+
+    // Hủy phiên làm việc hoàn toàn
+    session_destroy();
+
+    // Thông báo và chuyển hướng về trang chủ
+    echo "<script>
+        alert('Bạn đã đăng xuất thành công!');
+        window.location.href = 'index.php';
+    </script>";
+    exit(); // Dừng code tại đây không chạy tiếp phần dưới
+}
+
 // 1. Gọi Header
 include 'site/header.php';
 

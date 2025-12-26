@@ -268,6 +268,42 @@ ALTER TABLE `tbl_news`
   ADD CONSTRAINT `tbl_news_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `tbl_categories` (`id`);
 COMMIT;
 
+
+
+
+-- 1. Cập nhật bảng Users (Role mới, Avatar, Ngày tạo)
+ALTER TABLE `tbl_users` 
+MODIFY COLUMN `role` ENUM('user', 'admin', 'moderator', 'contributor', 'reporter', 'journalist') DEFAULT 'user',
+ADD COLUMN `avatar` VARCHAR(255) DEFAULT 'default_avatar.jpg' AFTER `email`,
+ADD COLUMN `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER `avatar`;
+
+-- 2. Cập nhật bảng News (Trạng thái duyệt bài, Lượt xem)
+ALTER TABLE `tbl_news` 
+ADD COLUMN `view_count` INT(11) DEFAULT 0 AFTER `category_id`,
+ADD COLUMN `trang_thai` ENUM('ban_nhap', 'cho_duyet', 'da_dang', 'bi_tu_choi') DEFAULT 'cho_duyet' AFTER `view_count`;
+
+-- 3. Cập nhật bảng Comments (Reply lồng nhau, Trạng thái ẩn/hiện, Ngày bình luận)
+ALTER TABLE `tbl_comments`
+ADD COLUMN `parent_id` INT(11) DEFAULT NULL AFTER `user_id`,
+ADD COLUMN `status` TINYINT(1) DEFAULT 1 COMMENT '1: hiện, 0: ẩn' AFTER `noidung`,
+ADD COLUMN `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER `status`;
+
+-- Thêm khóa ngoại cho chức năng Reply
+ALTER TABLE `tbl_comments` 
+ADD CONSTRAINT `fk_comment_parent` FOREIGN KEY (`parent_id`) REFERENCES `tbl_comments`(`id`) ON DELETE CASCADE;
+
+-- 4. Tạo bảng Likes (Mỗi người 1 like/bài, không lo spam)
+CREATE TABLE IF NOT EXISTS `tbl_likes` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `news_id` INT(11) NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_user_news_like` (`user_id`, `news_id`),
+  CONSTRAINT `fk_like_user` FOREIGN KEY (`user_id`) REFERENCES `tbl_users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_like_news` FOREIGN KEY (`news_id`) REFERENCES `tbl_news` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

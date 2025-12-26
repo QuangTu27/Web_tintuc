@@ -94,6 +94,10 @@ if (isset($_POST['btn_update'])) {
             <label>Quyền</label>
             <select name="role">
                 <option value="user" <?= $user['role'] == 'user' ? 'selected' : '' ?>>User</option>
+                <option value="editor" <?= $user['role'] == 'editor' ? 'selected' : '' ?>>Editor</option>
+                <option value="phongvien" <?= $user['role'] == 'phongvien' ? 'selected' : '' ?>>Phóng viên</option>
+                <option value="nhabao" <?= $user['role'] == 'nhabao' ? 'selected' : '' ?>>Nhà báo</option>
+                <option value="ctv" <?= $user['role'] == 'ctv' ? 'selected' : '' ?>>Cộng tác viên</option>
                 <option value="admin" <?= $user['role'] == 'admin' ? 'selected' : '' ?>>Admin</option>
             </select>
         </div>

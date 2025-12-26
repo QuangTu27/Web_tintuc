@@ -28,7 +28,7 @@
                 </div>
             </div>
 
-            <form id="login-form" action="/Web_tintuc/site/pages/dangnhap.php" method="POST" class="auth-form active">
+            <form id="login-form" action="/Web_tintuc/site/pages/auth/dangnhap.php" method="POST" class="auth-form active">
                 <div class="input-group">
                     <label>TÊN ĐĂNG NHẬP *</label>
                     <input type="text" name="username" placeholder="Nhập tên đăng nhập" required>
@@ -44,7 +44,7 @@
 
             </form>
 
-            <form id="register-form" action="/Web_tintuc/site/pages/dangky.php" method="POST" class="auth-form">
+            <form id="register-form" action="/Web_tintuc/site/pages/auth/dangky.php" method="POST" class="auth-form">
 
                 <div class="input-group">
                     <label>HỌ VÀ TÊN *</label>

@@ -1,0 +1,277 @@
+/*1. LAYOUT & STRUCTURE*/
+.profile-container {
+  display: flex;
+  gap: 30px;
+  max-width: 1100px;
+  margin: 20px auto;
+  align-items: flex-start;
+}
+
+.profile-sidebar {
+  flex: 1;
+  max-width: 280px;
+}
+
+.profile-content {
+  flex: 3;
+  background: #fff;
+  padding: 30px;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+}
+
+/*  2. SIDEBAR CARD  */
+.user-card {
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.user-card-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.avatar-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  object-fit: cover;
+}
+
+.user-meta h4 {
+  margin: 0;
+  font-size: 15px;
+  color: #333;
+}
+.user-meta span {
+  font-size: 13px;
+  color: #888;
+}
+
+.contact {
+  font-size: 13px;
+  color: #006aff;
+  margin-bottom: 15px;
+}
+/* Menu */
+.profile-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.profile-menu a {
+  display: block;
+  padding: 12px 0;
+  font-size: 15px;
+  color: #555;
+  text-decoration: none;
+  transition: 0.2s;
+}
+.profile-menu a:hover {
+  color: #00b686;
+  padding-left: 5px;
+}
+.profile-menu li.active a {
+  color: #333;
+  font-weight: bold;
+}
+
+.logout-item {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
+}
+.logout-item a {
+  color: #777;
+}
+.logout-item a:hover {
+  color: #d9534f;
+}
+
+/* Support Box */
+.support-box {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #666;
+}
+
+/*  3. CONTENT AREA  */
+.page-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.info-row:last-child {
+  border-bottom: none;
+}
+.info-row.avatar-row {
+  align-items: flex-start;
+}
+
+.info-label {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+.info-value {
+  font-size: 15px;
+  color: #666;
+  display: block;
+}
+
+/*  4. EDIT FORMS  */
+.edit-container {
+  display: none;
+}
+.d-block {
+  display: block !important;
+} /* Class hỗ trợ hiện form khi có lỗi */
+.hidden {
+  display: none !important;
+}
+
+/* Box Styles */
+.normal-edit-box {
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+}
+
+.avatar-edit-box {
+  border: 2px dashed #ddd;
+  padding: 30px;
+  text-align: center;
+  border-radius: 4px;
+  background: #fdfdfd;
+}
+
+/* Avatar Sizes */
+.avatar-sm {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: 10px;
+}
+.avatar-md {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+/* Form Elements */
+.form-control {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.form-label {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* Password Toggle */
+.password-wrapper {
+  position: relative;
+}
+.password-wrapper input {
+  padding-right: 40px;
+}
+.toggle-text {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-80%);
+  font-size: 13px;
+  color: #666;
+  cursor: pointer;
+  user-select: none;
+}
+.toggle-text:hover {
+  color: #333;
+}
+
+/* ===== 5. BUTTONS & ACTIONS ===== */
+.btn-save {
+  background: #00b686;
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn-save:hover {
+  background: #019d73;
+}
+
+.btn-change,
+.btn-close-edit {
+  font-size: 13px;
+  color: #999;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.btn-change:hover {
+  color: #00b686;
+}
+.btn-close-edit {
+  float: right;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Misc */
+.profile-divider {
+  border: 0;
+  border-top: 1px solid #f0f0f0;
+  margin: 0;
+}
+.error-msg {
+  color: #be1e2d;
+  font-size: 13px;
+  margin: -10px 0 15px;
+  display: block;
+}
+.mb-10 {
+  margin-bottom: 10px;
+  overflow: hidden;
+}

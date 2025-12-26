@@ -1,9 +1,17 @@
 <?php
-include_once($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
+include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
 // Lấy danh sách danh mục cho Menu
 $sql_cat = "SELECT * FROM tbl_categories ORDER BY id ASC";
 $res_cat = mysqli_query($conn, $sql_cat);
+
+$avatar = !empty($_SESSION['user_avatar'])
+    ? $_SESSION['user_avatar']
+    : 'default_avatar.png';
+
+$displayName = $_SESSION['user_name'] ?? 'Người dùng';
+$username = $_SESSION['user_username'] ?? $displayName;
+
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -12,7 +20,7 @@ $res_cat = mysqli_query($conn, $sql_cat);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang tin tức 24H</title>
-    <link rel="stylesheet" href="/Web_tintuc/site/css/style.css">
+    <link rel="stylesheet" href="/Web_tintuc/site/css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 
@@ -27,17 +35,38 @@ $res_cat = mysqli_query($conn, $sql_cat);
 
                 <div class="user-action">
                     <?php if (isset($_SESSION['user_login'])): ?>
-                        <span>Xin chào, <b><?= htmlspecialchars($_SESSION['user_name']) ?></b></span>
-                        <span style="margin: 0 5px;">|</span>
-                        <a href="index.php?act=logout" onclick="return confirm('Bạn muốn đăng xuất?')">Đăng xuất</a>
+
+                        <div class="user-profile-box">
+                            <div class="profile-toggle">
+                                <img src="/Web_tintuc/images/avatars/<?= $avatar ?>?v=<?= time() ?>" class="user-avatar-mini" alt="User"> <span class="name-text"><?= htmlspecialchars($displayName) ?></span>
+                                <i class="fas fa-caret-down" style="font-size: 12px; color: #666;"></i>
+                            </div>
+
+                            <ul class="profile-dropdown">
+                                <li class="dropdown-header">
+                                    <img src="/Web_tintuc/images/avatars/<?= $avatar ?>?v=<?= time() ?>" class="avatar-large"> <strong class="user-name-text"><?= htmlspecialchars($username) ?></strong>
+                                </li>
+
+                                <li><a href="index.php?p=thongtincanhan">Thông tin chung</a></li>
+                                <li><a href="index.php?p=my_comments">Ý kiến của bạn</a></li>
+                                <li><a href="index.php?p=tin_da_luu">Tin đã lưu</a></li>
+                                <li><a href="index.php?p=tin_da_xem">Tin đã xem</a></li>
+
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="index.php?act=logout" class="logout-link" onclick="return confirm('Bạn muốn đăng xuất?')">
+                                        Thoát <i class="fas fa-sign-out-alt"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
                     <?php else: ?>
                         <a href="javascript:void(0)" onclick="openAuthModal('login')">
                             <i class="fas fa-user"></i> Đăng nhập
                         </a>
                         <span style="margin: 0 5px;">|</span>
-                        <a href="javascript:void(0)" onclick="openAuthModal('register')">
-                            Đăng ký
-                        </a>
+                        <a href="javascript:void(0)" onclick="openAuthModal('register')">Đăng ký</a>
                     <?php endif; ?>
                 </div>
             </div>

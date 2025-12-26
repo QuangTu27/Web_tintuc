@@ -17,7 +17,7 @@ if (isset($_POST['btn_login'])) {
     // LƯU Ý QUAN TRỌNG:
     // 1. Tên bảng phải là 'tbl_users' (như trong hình bạn gửi)
     // 2. Cột role phải so sánh với chữ 'admin'
-    $sql = "SELECT * FROM tbl_users WHERE username = '$u' AND password = '$p' AND role IN ('admin', 'editor', 'phongvien', 'ctv')";
+    $sql = "SELECT * FROM tbl_users WHERE username = '$u' AND password = '$p' AND role NOT IN ('user')";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {

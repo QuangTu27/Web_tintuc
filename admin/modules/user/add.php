@@ -64,6 +64,7 @@ if (isset($_POST['btn_add'])) {
             <select name="role">
                 <option value="editor">Editor</option>
                 <option value="phongvien">Phóng viên</option>
+                <option value="nhabao">Nhà báo</option>
                 <option value="ctv">Cộng tác viên</option>
                 <option value="user">User</option>
             </select>

@@ -304,6 +304,27 @@ CREATE TABLE IF NOT EXISTS `tbl_likes` (
   CONSTRAINT `fk_like_news` FOREIGN KEY (`news_id`) REFERENCES `tbl_news` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Thêm cột vào bảng News
+ALTER TABLE `tbl_news` 
+ADD COLUMN `author_id` INT(11) DEFAULT NULL AFTER `category_id`,
+ADD COLUMN `publisher_id` INT(11) DEFAULT NULL AFTER `author_id`,
+ADD COLUMN `ngay_duyet` DATETIME DEFAULT NULL AFTER `trang_thai`;
+
+-- Tạo ràng buộc (Foreign Key) để đảm bảo ID người dùng phải tồn tại
+ALTER TABLE `tbl_news` 
+ADD CONSTRAINT `fk_news_author` FOREIGN KEY (`author_id`) REFERENCES `tbl_users` (`id`) ON DELETE SET NULL,
+ADD CONSTRAINT `fk_news_publisher` FOREIGN KEY (`publisher_id`) REFERENCES `tbl_users` (`id`) ON DELETE SET NULL;
+
+CREATE TABLE IF NOT EXISTS `tbl_likes` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `news_id` INT(11) NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_user_news_like` (`user_id`, `news_id`), -- Chặn spam like
+  CONSTRAINT `fk_like_user` FOREIGN KEY (`user_id`) REFERENCES `tbl_users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_like_news` FOREIGN KEY (`news_id`) REFERENCES `tbl_news` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

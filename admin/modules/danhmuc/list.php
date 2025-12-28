@@ -38,62 +38,63 @@ $result = mysqli_query($conn, $sql);
         </button>
     </p>
 
+    <div class="table-scroll">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox"
+                            id="checkAll"
+                            <?= !$canDelete ? 'disabled title="Chỉ Admin được xoá"' : '' ?>>
+                    </th>
+                    <th>ID</th>
+                    <th>Tên danh mục</th>
+                    <th>Người phụ trách</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
 
-    <table class="admin-table">
-        <thead>
-            <tr>
-                <th>
-                    <input type="checkbox"
-                        id="checkAll"
-                        <?= !$canDelete ? 'disabled title="Chỉ Admin được xoá"' : '' ?>>
-                </th>
-                <th>ID</th>
-                <th>Tên danh mục</th>
-                <th>Người phụ trách</th>
-                <th>Thao tác</th>
-            </tr>
-        </thead>
+            <tbody>
+                <?php if (mysqli_num_rows($result) > 0): ?>
+                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                        <tr>
+                            <td>
+                                <input type="checkbox"
+                                    name="ids[]"
+                                    value="<?= $row['id'] ?>"
+                                    <?= !$canDelete ? 'disabled title="Chỉ Admin được xoá"' : '' ?>>
+                            </td>
+                            <td><?= $row['id'] ?></td>
+                            <td><?= htmlspecialchars($row['name']) ?></td>
+                            <td>
+                                <?= $row['manager_name'] ?? '<i>Chưa phân công</i>' ?>
+                            </td>
+                            <td>
 
-        <tbody>
-            <?php if (mysqli_num_rows($result) > 0): ?>
-                <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                                <a class="btn btn-edit <?= !$canEdit ? 'btn-disabled' : '' ?>"
+                                    href="<?= $canEdit ? 'index.php?mod=danhmuc&act=edit&id=' . $row['id'] : 'javascript:void(0)' ?>">
+                                    ✏️ Sửa
+                                </a>
+
+                                <a class="btn btn-delete <?= !$canDelete ? 'btn-disabled' : '' ?>"
+                                    href="<?= $canDelete ? 'index.php?mod=danhmuc&act=delete&id=' . $row['id'] : 'javascript:void(0)' ?>"
+                                    <?= $canDelete ? 'onclick="return confirm(\'Bạn có chắc muốn xoá?\')"' : '' ?>>
+                                    🗑️ Xoá
+                                </a>
+
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
                     <tr>
                         <td>
-                            <input type="checkbox"
-                                name="ids[]"
-                                value="<?= $row['id'] ?>"
-                                <?= !$canDelete ? 'disabled title="Chỉ Admin được xoá"' : '' ?>>
-                        </td>
-                        <td><?= $row['id'] ?></td>
-                        <td><?= htmlspecialchars($row['name']) ?></td>
-                        <td>
-                            <?= $row['manager_name'] ?? '<i>Chưa phân công</i>' ?>
-                        </td>
-                        <td>
-
-                            <a class="btn btn-edit <?= !$canEdit ? 'btn-disabled' : '' ?>"
-                                href="<?= $canEdit ? 'index.php?mod=danhmuc&act=edit&id=' . $row['id'] : 'javascript:void(0)' ?>">
-                                ✏️ Sửa
-                            </a>
-
-                            <a class="btn btn-delete <?= !$canDelete ? 'btn-disabled' : '' ?>"
-                                href="<?= $canDelete ? 'index.php?mod=danhmuc&act=delete&id=' . $row['id'] : 'javascript:void(0)' ?>"
-                                <?= $canDelete ? 'onclick="return confirm(\'Bạn có chắc muốn xoá?\')"' : '' ?>>
-                                🗑️ Xoá
-                            </a>
-
+                            Chưa có danh mục nào
                         </td>
                     </tr>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <tr>
-                    <td>
-                        Chưa có danh mục nào
-                    </td>
-                </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
 </form>
 
 <script>

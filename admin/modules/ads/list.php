@@ -18,46 +18,51 @@ $result = mysqli_query($conn, $sql);
             🗑️ Xoá 0 quảng cáo
         </button>
     </p>
-    <table>
-        <tr>
-            <th><input type="checkbox" id="checkAll"></th>
-            <th>ID</th>
-            <th>Tiêu đề</th>
-            <th>Hình ảnh</th>
-            <th>Link</th>
-            <th>Vị trí</th>
-            <th>Trạng thái</th>
-            <th>Thao tác</th>
-        </tr>
+    <div class="table-scroll">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="checkAll"></th>
+                    <th>ID</th>
+                    <th>Tiêu đề</th>
+                    <th>Hình ảnh</th>
+                    <th>Link</th>
+                    <th>Vị trí</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                    <tr>
+                        <td><input type="checkbox" name="ids[]" value="<?= $row['id'] ?>"></td>
+                        <td><?= $row['id'] ?></td>
+                        <td><?= $row['title'] ?></td>
+                        <td class="ads-image">
+                            <img src="/Web_tintuc/images/ads/<?= ($row['image']) ?>">
+                        </td>
+                        <td><?= $row['link'] ?></td>
+                        <td><?= $row['position'] ?></td>
+                        <td>
+                            <?= $row['status'] === 'hien' ? 'Hiển thị' : 'Ẩn' ?>
+                        </td>
+                        <td>
+                            <a class="btn btn-edit"
+                                href="index.php?mod=ads&act=edit&id=<?= $row['id'] ?>">
+                                ✏️ Sửa
+                            </a>
+                            <a class="btn btn-delete"
+                                href="index.php?mod=ads&act=delete&id=<?= $row['id'] ?>"
+                                onclick="return confirm('Bạn có chắc muốn xoá quảng cáo này?')">
+                                🗑️ Xoá
+                            </a>
+                        </td>
 
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
-            <tr>
-                <td><input type="checkbox" name="ids[]" value="<?= $row['id'] ?>"></td>
-                <td><?= $row['id'] ?></td>
-                <td><?= $row['title'] ?></td>
-                <td class="ads-image">
-                    <img src="/Web_tintuc/images/ads/<?= ($row['image']) ?>">
-                </td>
-                <td><?= $row['link'] ?></td>
-                <td><?= $row['position'] ?></td>
-                <td>
-                    <?= $row['status'] === 'hien' ? 'Hiển thị' : 'Ẩn' ?>
-                </td>
-                <td>
-                    <a class="btn btn-edit"
-                        href="index.php?mod=ads&act=edit&id=<?= $row['id'] ?>">
-                        ✏️ Sửa
-                    </a>
-                    <a class="btn btn-delete"
-                        href="index.php?mod=ads&act=delete&id=<?= $row['id'] ?>"
-                        onclick="return confirm('Bạn có chắc muốn xoá quảng cáo này?')">
-                        🗑️ Xoá
-                    </a>
-                </td>
-
-            </tr>
-        <?php } ?>
-    </table>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
 </form>
 
 <script>

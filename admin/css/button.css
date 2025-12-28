@@ -14,7 +14,8 @@
 }
 .btn-add {
   display: inline-block;
-  margin-top: 20px;
+  margin-top: 0px;
+  margin-bottom: 20px;
   padding: 10px 15px;
   background-color: #28a745;
   color: white;
@@ -30,15 +31,32 @@
   color: black;
   margin-right: 10px;
 }
+.btn-edit:hover {
+  background-color: #e0a800;
+}
 
 .btn-delete {
   background-color: #dc3545;
   color: white;
 }
+.btn-delete:hover {
+  background-color: #c82333;
+}
+
+.btn-view {
+  background-color: #17a2b8;
+  color: white;
+}
+.btn-view:hover {
+  background-color: #138496;
+}
 
 .btn_back {
   background-color: #6c757d;
   color: white;
+}
+.btn_back:hover {
+  background-color: #5a6268;
 }
 
 .btn-OK {

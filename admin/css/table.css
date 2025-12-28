@@ -1,8 +1,13 @@
+.table-scroll {
+  max-height: 500px; /* chiều cao vùng scroll */
+  overflow-y: auto;
+  border: 1px solid #ddd;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
   background: white;
-  margin-top: 20px;
 }
 
 th,
@@ -13,12 +18,17 @@ td {
 }
 
 th {
-  background-color: #007bff;
+  position: sticky;
+  top: 0;
+  background-color: #007bff; /* giữ màu cũ */
   color: white;
+  z-index: 10;
 }
+
 tr:nth-child(even) {
   background-color: #f9f9f9;
 }
+
 .ads-image {
   text-align: center;
 }

@@ -51,7 +51,7 @@ $avatar = !empty($_SESSION['admin_avatar'])
                 <li><a href="index.php?mod=tintuc&act=list"><i class="fas fa-newspaper"></i> Quản lý Tin tức</a></li>
                 <li><a href="index.php?mod=danhmuc&act=list"><i class="fas fa-list"></i> Quản lý Danh mục</a></li>
 
-                <li><a href="index.php?mod=binhluan&act=list"><i class="fas fa-comments"></i> Bình luận</a></li>
+                <li><a href="index.php?mod=binhluan&act=list"><i class="fas fa-comments"></i> Quản lý Bình luận</a></li>
 
                 <li><a href="index.php?mod=ads&act=list"><i class="fas fa-ad"></i> Quản lý Quảng cáo</a></li>
                 <li><a href="index.php?mod=user&act=list"><i class="fas fa-users"></i> Quản lý Tài khoản</a></li>

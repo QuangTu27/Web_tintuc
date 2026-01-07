@@ -57,7 +57,7 @@ function renderAdsMedia($ad)
 
             <?php if (mysqli_num_rows($res_ads_inline) > 0): ?>
                 <div class="ads-inline">
-                    <div class="ads-slider" data-speed="4000">
+                    <div class="ads-slider" data-speed="5000">
                         <?php $i = 0;
                         while ($ad = mysqli_fetch_assoc($res_ads_inline)): ?>
                             <div class="ads-item <?= ($i++ == 0) ? 'active' : '' ?>">
@@ -77,7 +77,7 @@ function renderAdsMedia($ad)
 
         <?php if (mysqli_num_rows($res_ads_sidebar) > 0): ?>
             <div class="widget-ads">
-                <div class="ads-slider" data-speed="6000">
+                <div class="ads-slider" data-speed="7000">
                     <?php $i = 0;
                     while ($ad = mysqli_fetch_assoc($res_ads_sidebar)): ?>
                         <div class="ads-item <?= ($i++ == 0) ? 'active' : '' ?>">
@@ -93,7 +93,7 @@ function renderAdsMedia($ad)
 
 <?php if (mysqli_num_rows($res_ads_footer) > 0): ?>
     <div class="home-footer-ads container">
-        <div class="ads-slider" data-speed="5000">
+        <div class="ads-slider" data-speed="8000">
             <?php $i = 0;
             while ($ad = mysqli_fetch_assoc($res_ads_footer)): ?>
                 <div class="ads-item <?= ($i++ == 0) ? 'active' : '' ?>">

@@ -1,3 +1,48 @@
+/* Header CSS cho hiệu ứng sticky và ẩn hiện thanh trên cùng */
+/* Bao quanh toàn bộ header để giữ vị trí */
+header {
+  width: 100%;
+  z-index: 1000;
+}
+
+/* Thanh Top Bar và Logo sẽ có hiệu ứng chuyển cảnh mượt mà */
+.top-bar,
+.main-header {
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+/* KHI CUỘN XUỐNG: Thu gọn chiều cao về 0 để ẩn hoàn toàn */
+header.is-sticky .top-bar,
+header.is-sticky .main-header {
+  height: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  border: none;
+}
+
+/* THANH DANH MỤC: Luôn dính ở trên cùng màn hình */
+.nav-menu-wrapper {
+  background: #fff; /* Hoặc màu chủ đạo của bạn */
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+/* Chỉnh lại Nav Menu để hiển thị đẹp hơn khi dính */
+.nav-menu ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+}
+
 /* Container chính */
 .weather-box {
   display: flex;

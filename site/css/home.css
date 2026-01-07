@@ -28,6 +28,19 @@
   margin-bottom: 20px;
 }
 
+/* KHỐNG CHẾ QUẢNG CÁO INLINE (Giữa nội dung) */
+.ads-inline .ads-slider {
+  max-width: 800px; /* Thu hẹp chiều ngang */
+  margin: 20px auto;
+}
+
+.ads-inline img,
+.ads-inline video {
+  max-height: 250px;
+  object-fit: contain; /* Giữ nguyên tỷ lệ ảnh, không bị cắt mất chữ */
+  background: #f4f4f4; /* Tạo nền cho khoảng trắng nếu ảnh ngắn */
+}
+
 /* Các item quảng cáo nằm chồng lên nhau */
 .ads-slider .ads-item {
   position: absolute;

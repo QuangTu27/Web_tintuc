@@ -104,6 +104,31 @@ $username = $_SESSION['user_username'] ?? $displayName;
         </div>
     </header>
 
+    <script>
+        let lastScrollTop = 0; // Lưu vị trí cuộn trước đó
+        const header = document.getElementById('siteHeader');
+
+        window.addEventListener('scroll', function() {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (currentScroll > 150) {
+                // TRƯỜNG HỢP 1: Đang cuộn xuống -> Thu gọn Header
+                if (currentScroll > lastScrollTop) {
+                    header.classList.add('is-sticky');
+                }
+                // TRƯỜNG HỢP 2: Đang cuộn lên -> Hiện lại đầy đủ
+                else {
+                    header.classList.remove('is-sticky');
+                }
+            } else {
+                // Khi ở gần đầu trang -> Luôn hiện đầy đủ
+                header.classList.remove('is-sticky');
+            }
+
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // Cập nhật vị trí mới
+        }, false);
+    </script>
+
 
     <script>
         /* ====== THỜI GIAN THỰC ====== */

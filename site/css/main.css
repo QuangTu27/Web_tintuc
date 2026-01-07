@@ -1,5 +1,6 @@
 @import url("profile.css");
 @import url("profile_popup.css");
-@import url("style.css");
+@import url("style_base.css");
 @import url("auth.css");
 @import url("home.css");
+@import url("header.css");

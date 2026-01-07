@@ -12,6 +12,14 @@
   text-align: center;
 }
 
+.admin-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch; /* Ép tất cả các con trực tiếp cao bằng nhau */
+  margin-bottom: 10px;
+  gap: 15px;
+}
+
 .admin-form {
   max-width: 800px;
   margin: 20px auto;
@@ -21,7 +29,7 @@
 }
 
 .form-group {
-  margin-bottom: 22px;
+  margin-bottom: 16px;
 }
 
 .form-group label {
@@ -53,4 +61,27 @@
   object-fit: cover;
   margin: 0 auto 10px;
   border: 3px solid #007bff;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 15px;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+  animation: fadeOut 3s forwards; /* Tự ẩn sau 3 giây */
+  animation-delay: 2s;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
 }

@@ -3,7 +3,8 @@
         <div class="footer-cols">
             <div>
                 <h3 style="color:#fff; margin-bottom:15px;">VỀ CHÚNG TÔI</h3>
-                <p>Trang tin tức cập nhật nhanh chóng, chính xác 24/7. Đa dạng các chuyên mục từ Thời sự, Thể thao đến Giải trí.</p>
+                <p>Trang tin tức cập nhật nhanh chóng, chính xác 24/7.
+                    Đa dạng các chuyên mục từ Thời sự, Thể thao đến Giải trí.</p>
             </div>
             <div>
                 <h3 style="color:#fff; margin-bottom:15px;">LIÊN HỆ</h3>
@@ -19,7 +20,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; 2025 Web Tintuc - Design by Student.
+            &copy; 2026 Web Tintuc - Design by Group 5 - 74DCTT22.
         </div>
     </div>
 </footer>

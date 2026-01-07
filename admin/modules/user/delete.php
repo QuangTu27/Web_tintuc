@@ -21,7 +21,7 @@ if (isset($_GET['id'])) {
         }
 
         // Nếu xoá người khác -> Quay về danh sách
-        header('Location: index.php?mod=user&act=list');
+        header('Location: index.php?mod=user&act=list&msg=deleted');
         exit();
     } else {
         echo "<p style='color:red'>Lỗi khi xoá user: " . mysqli_error($conn) . "</p>";
@@ -47,7 +47,7 @@ if (isset($_POST['ids']) && is_array($_POST['ids'])) {
         }
 
         // Nếu xoá người khác -> Quay về danh sách
-        header('Location: index.php?mod=user&act=list');
+        header('Location: index.php?mod=user&act=list&msg=deleted_multiple');
         exit();
     } else {
         echo "<script>alert('Lỗi xoá nhiều: " . mysqli_error($conn) . "');</script>";

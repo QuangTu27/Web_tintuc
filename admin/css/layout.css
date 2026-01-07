@@ -5,7 +5,7 @@
 
 /* Sidebar */
 .sidebar {
-  width: 250px;
+  width: 230px;
   background-color: #343a40;
   color: white;
   transition: all 0.3s;
@@ -60,4 +60,15 @@
 .content-body {
   padding: 30px;
   flex: 1;
+}
+
+.sidebar .logout-link {
+  color: #e60c22;
+  padding: 10px 20px;
+  display: block;
+}
+
+.sidebar .logout-link:hover {
+  background-color: #e60c22;
+  color: white !important;
 }

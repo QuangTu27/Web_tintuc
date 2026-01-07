@@ -1,0 +1,56 @@
+/* Container chính */
+.weather-box {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Khối văn bản địa điểm và ngày tháng */
+.date-location {
+  text-align: right;
+  line-height: 1.2;
+}
+
+.date-location .city {
+  font-weight: bold;
+  color: inherit;
+  font-size: 15px;
+}
+
+.date-location .date {
+  color: inherit;
+  font-size: 13px;
+}
+
+/* Thanh ngăn cách dọc */
+.weather-divider {
+  width: 1px;
+  height: 28px;
+  background: #ddd;
+}
+
+/* Khối biểu tượng và nhiệt độ */
+.weather-detail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.weather-detail img {
+  width: 32px; /* Tăng kích thước icon cho rõ */
+  height: 32px;
+  object-fit: contain;
+}
+
+.weather-detail .temp {
+  font-size: 20px;
+  font-weight: bold;
+  color: inherit;
+}
+
+#weather-icon {
+  background: transparent !important;
+  border-radius: 0 !important;
+  width: 28px;
+  height: 28px;
+}

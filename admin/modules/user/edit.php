@@ -53,16 +53,12 @@ if (isset($_POST['btn_update'])) {
     }
 
     mysqli_query($conn, $sqlUpdate);
-    header("Location: index.php?mod=user&act=list");
+    header("Location: index.php?mod=user&act=list&msg=updated");
     exit;
 }
 ?>
 
 <div class="admin-container">
-
-    <a href="index.php?mod=user&act=list" class="btn btn-Cancel">
-        Quay lại
-    </a>
     <h2 class="admin-title">
         Cập nhật người dùng
     </h2>
@@ -75,9 +71,8 @@ if (isset($_POST['btn_update'])) {
         </div>
 
         <div class="form-group">
-            <label>Mật khẩu mới</label>
+            <label>Mật khẩu mới (Bỏ trống nếu không đổi)</label>
             <input type="password" name="password">
-            <small class="form-note">Bỏ trống nếu không đổi</small>
         </div>
 
         <div class="form-group">
@@ -107,7 +102,7 @@ if (isset($_POST['btn_update'])) {
                 💾 Cập nhật
             </button>
             <a href="index.php?mod=user&act=list" class="btn btn-Cancel">
-                Huỷ
+                ❌ Huỷ
             </a>
         </div>
 

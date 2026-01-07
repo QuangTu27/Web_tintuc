@@ -31,20 +31,34 @@ $username = $_SESSION['user_username'] ?? $displayName;
     <header>
         <div class="top-bar">
             <div class="container">
-                <span><i class="far fa-clock"></i> <?= date('d/m/Y') ?></span>
+                <div class="weather-box">
+                    <div class="date-location">
+                        <div class="city" id="location">Hà Nội</div>
+                        <div class="date" id="date-time">--</div>
+                    </div>
+
+                    <div class="weather-divider"></div>
+
+                    <div class="weather-detail">
+                        <img id="weather-icon" src="" alt="weather icon">
+                        <span class="temp" id="temperature">--°C</span>
+                    </div>
+                </div>
 
                 <div class="user-action">
                     <?php if (isset($_SESSION['user_login'])): ?>
 
                         <div class="user-profile-box">
                             <div class="profile-toggle">
-                                <img src="/Web_tintuc/images/avatars/<?= $avatar ?>?v=<?= time() ?>" class="user-avatar-mini" alt="User"> <span class="name-text"><?= htmlspecialchars($displayName) ?></span>
-                                <i class="fas fa-caret-down" style="font-size: 12px; color: #666;"></i>
+                                <img src="/Web_tintuc/images/avatars/<?= $avatar ?>?v=<?= time() ?>" class="user-avatar-mini" alt="User">
+                                <span class="name-text"><?= htmlspecialchars($displayName) ?></span>
+                                <i class="fas fa-caret-down" style="font-size: 12px; color: white;"></i>
                             </div>
 
                             <ul class="profile-dropdown">
                                 <li class="dropdown-header">
-                                    <img src="/Web_tintuc/images/avatars/<?= $avatar ?>?v=<?= time() ?>" class="avatar-large"> <strong class="user-name-text"><?= htmlspecialchars($username) ?></strong>
+                                    <img src="/Web_tintuc/images/avatars/<?= $avatar ?>?v=<?= time() ?>" class="avatar-large">
+                                    <strong class="user-name-text"><?= htmlspecialchars($username) ?></strong>
                                 </li>
 
                                 <li><a href="index.php?p=thongtincanhan">Thông tin chung</a></li>
@@ -89,3 +103,39 @@ $username = $_SESSION['user_username'] ?? $displayName;
             </nav>
         </div>
     </header>
+
+
+    <script>
+        /* ====== THỜI GIAN THỰC ====== */
+        function updateDateTime() {
+            const now = new Date();
+            const weekdays = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+            const dayName = weekdays[now.getDay()];
+
+            const date = now.toLocaleDateString('vi-VN');
+
+            // Cập nhật đúng định dạng: Thứ..., ngày/tháng/năm
+            document.getElementById('date-time').innerText = `${dayName}, ${date}`;
+        }
+
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        /* ====== THỜI TIẾT (OpenWeatherMap) ====== */
+        const apiKey = '8356bc5ee72baf34994e81f6bdb35652';
+        const city = 'Hanoi';
+
+        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&lang=vi&appid=${apiKey}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.cod !== 200) return;
+
+                document.getElementById('location').innerText = data.name;
+
+                document.getElementById('temperature').innerText =
+                    Math.round(data.main.temp) + '°C';
+
+                document.getElementById('weather-icon').src =
+                    `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
+            });
+    </script>

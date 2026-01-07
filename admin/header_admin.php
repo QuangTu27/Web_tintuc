@@ -80,7 +80,7 @@ $avatar = !empty($_SESSION['admin_avatar'])
                         </a>
                     </li>
                     <li>
-                        <a href="index.php?act=logout"
+                        <a href="index.php?act=logout" class="logout-link"
                             onclick="return confirm('Bạn có chắc muốn đăng xuất?');">
                             <i class="fas fa-sign-out-alt"></i> Đăng xuất
                         </a>

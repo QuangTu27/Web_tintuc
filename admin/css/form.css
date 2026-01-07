@@ -53,6 +53,11 @@
   outline: none;
   border-color: #007bff;
 }
+small.form-hint {
+  font-size: 13px;
+  color: blue;
+  margin-top: 4px;
+}
 .admin-avatar {
   display: block;
   width: 100px;

@@ -1,52 +1,134 @@
 <?php
-if(isset($_POST['themtintuc'])){
-    $tieude = mysqli_real_escape_string($conn, $_POST['tieude']);
-    $tomtat = mysqli_real_escape_string($conn, $_POST['tomtat']);
-    $noidung = mysqli_real_escape_string($conn, $_POST['noidung']);
-    $danhmuc = $_POST['danhmuc'];
-    $trangthai = $_POST['trangthai'];
-    $author_id = $_SESSION['admin_id']; // Lấy từ phiên đăng nhập
+// Kết nối CSDL
+include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
-    // Xử lý ảnh
+// 1. KIỂM TRA QUYỀN DUYỆT BÀI
+// Chỉ Admin và Editor mới được quyền cho bài hiện ngay lập tức
+$canPublish = ($_SESSION['admin_role'] === 'admin' || $_SESSION['admin_role'] === 'editor');
+
+// 2. LẤY DANH SÁCH DANH MỤC (Kèm tên cha để hiển thị rõ ràng)
+$sql_cate = "SELECT c.*, p.name AS parent_name 
+             FROM tbl_categories c 
+             LEFT JOIN tbl_categories p ON c.parent_id = p.id 
+             ORDER BY c.parent_id ASC, c.id ASC";
+$query_cate = mysqli_query($conn, $sql_cate);
+
+// 3. XỬ LÝ FORM
+if (isset($_POST['themtintuc'])) {
+    $tieude    = mysqli_real_escape_string($conn, $_POST['tieude']);
+    $tomtat    = mysqli_real_escape_string($conn, $_POST['tomtat']);
+    $noidung   = mysqli_real_escape_string($conn, $_POST['noidung']);
+    $danhmuc   = (int)$_POST['danhmuc'];
+    $author_id = $_SESSION['admin_id'];
+
+    // XỬ LÝ TRẠNG THÁI DỰA TRÊN QUYỀN
+    if ($canPublish) {
+        // Nếu là Sếp: Lấy giá trị từ Form (Đăng ngay/Nháp/Chờ)
+        $trangthai = $_POST['trangthai'];
+    } else {
+        // Nếu là Nhân viên: Bắt buộc là 'cho_duyet'
+        $trangthai = 'cho_duyet';
+    }
+
+    // XỬ LÝ ẢNH
     $hinhanh = $_FILES['hinhanh']['name'];
     $hinhanh_tmp = $_FILES['hinhanh']['tmp_name'];
-    $hinhanh_time = time().'_'.$hinhanh; // Tránh trùng tên ảnh
 
-    $sql_add = "INSERT INTO tbl_news(tieude, tomtat, noidung, category_id, trangthai, hinhanh, author_id) 
-                VALUES('$tieude', '$tomtat', '$noidung', '$danhmuc', '$trangthai', '$hinhanh_time', '$author_id')";
-    
-    if(mysqli_query($conn, $sql_add)){
-        move_uploaded_file($hinhanh_tmp, '../images/'.$hinhanh_time);
-        echo "<script>alert('Thêm tin thành công!'); window.location.href='index.php?mod=tintuc&act=list';</script>";
+    if ($hinhanh != '') {
+        $hinhanh_time = time() . '_' . $hinhanh; // Đổi tên tránh trùng
+        move_uploaded_file($hinhanh_tmp, '../../images/news/' . $hinhanh_time); // Lưu vào thư mục images/news
+    } else {
+        $hinhanh_time = '';
+    }
+
+    // INSERT DỮ LIỆU
+    $sql_add = "INSERT INTO tbl_news(tieude, tomtat, noidung, category_id, trangthai, hinhanh, author_id, ngaydang) 
+                VALUES('$tieude', '$tomtat', '$noidung', '$danhmuc', '$trangthai', '$hinhanh_time', '$author_id', NOW())";
+
+    if (mysqli_query($conn, $sql_add)) {
+        echo "<script>alert('Thêm bài viết thành công!'); window.location.href='index.php?mod=tintuc&act=list';</script>";
+    } else {
+        $error = "Lỗi SQL: " . mysqli_error($conn);
     }
 }
 ?>
 
-<div class="form-container" style="background: white; padding: 20px; border-radius: 8px;">
-    <h3><i class="fas fa-plus-circle"></i> Thêm bài viết mới</h3>
-    <form method="POST" action="" enctype="multipart/form-data">
-        <p>Tiêu đề bài viết: <br> <input type="text" name="tieude" style="width:100%; padding: 8px;" required></p>
-        <p>Tóm tắt bài viết: <br> <textarea name="tomtat" rows="3" style="width:100%; padding: 8px;"></textarea></p>
-        <p>Nội dung chi tiết: <br> <textarea name="noidung" id="editor" rows="10" style="width:100%; padding: 8px;"></textarea></p>
-        <p>Danh mục: 
-            <select name="danhmuc" style="padding: 8px;">
-                <?php
-                $sql_cate = "SELECT * FROM tbl_categories ORDER BY id DESC";
-                $query_cate = mysqli_query($conn, $sql_cate);
-                while($row_cate = mysqli_fetch_array($query_cate)){
-                    echo '<option value="'.$row_cate['id'].'">'.$row_cate['name'].'</option>';
-                }
+<div class="admin-container">
+    <div class="admin-header-inline">
+        <h2 class="admin-title">THÊM BÀI VIẾT MỚI</h2>
+    </div>
+
+    <?php if (isset($error)) { ?>
+        <div class="alert alert-warning"><?= $error ?></div>
+    <?php } ?>
+
+    <form method="POST" action="" enctype="multipart/form-data" class="admin-form">
+
+        <div class="form-group">
+            <label>Tiêu đề bài viết</label>
+            <input type="text" name="tieude" required placeholder="Nhập tiêu đề tin tức...">
+        </div>
+
+        <div class="form-group">
+            <label>Danh mục</label>
+            <select name="danhmuc" class="form-control" required>
+                <option value="">-- Chọn danh mục --</option>
+                <?php while ($row = mysqli_fetch_assoc($query_cate)) {
+                    // Hiển thị dạng: Thể thao > Bóng đá
+                    $catName = $row['name'];
+                    if ($row['parent_id'] != 0 && $row['parent_name'] != null) {
+                        $catName = $row['parent_name'] . ' > ' . $row['name'];
+                    }
                 ?>
+                    <option value="<?= $row['id'] ?>"><?= $catName ?></option>
+                <?php } ?>
             </select>
-        </p>
-        <p>Ảnh minh họa: <input type="file" name="hinhanh" required></p>
-        <p>Trạng thái: 
-            <select name="trangthai" style="padding: 8px;">
-                <option value="cho_duyet">Gửi duyệt</option>
-                <option value="da_dang">Đăng ngay (Admin)</option>
-                <option value="ban_nhap">Lưu bản nháp</option>
+        </div>
+
+        <div class="form-group">
+            <label>Ảnh đại diện (Thumbnail)</label>
+            <input type="file" name="hinhanh" required>
+        </div>
+
+        <div class="form-group">
+            <label>Tóm tắt (Sapo)</label>
+            <textarea name="tomtat" rows="4" class="form-control" placeholder="Mô tả ngắn về bài viết..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Nội dung chi tiết</label>
+            <textarea name="noidung" id="editor" rows="10" class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Trạng thái đăng</label>
+            <select name="trangthai" class="form-control" <?= (!$canPublish) ? 'disabled' : '' ?> style="<?= (!$canPublish) ? 'background:#e9ecef' : '' ?>">
+
+                <?php if ($canPublish): ?>
+                    <option value="da_dang">✅ Đăng ngay (Hiển thị lên web)</option>
+                    <option value="cho_duyet">⏳ Chờ duyệt</option>
+                    <option value="ban_nhap">📝 Lưu bản nháp (Ẩn)</option>
+                <?php else: ?>
+                    <option value="cho_duyet" selected>⏳ Gửi chờ duyệt (Bạn không có quyền đăng ngay)</option>
+                <?php endif; ?>
+
             </select>
-        </p>
-        <button type="submit" name="themtintuc" style="background: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px;">Đăng bài</button>
+            <?php if (!$canPublish): ?>
+                <small class="form-hint" style="color:red">* Bài viết của bạn cần được Biên tập viên duyệt trước khi hiển thị.</small>
+            <?php endif; ?>
+        </div>
+
+        <div class="btn-group-center">
+            <button type="submit" name="themtintuc" class="btn btn-OK">💾 Lưu bài viết</button>
+            <a href="index.php?mod=tintuc&act=list" class="btn btn-Cancel">❌ Hủy bỏ</a>
+        </div>
     </form>
 </div>
+
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('editor', {
+        height: 400,
+        versionCheck: false
+    });
+</script>

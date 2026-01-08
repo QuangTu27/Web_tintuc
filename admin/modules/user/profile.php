@@ -46,6 +46,9 @@ if (isset($_POST['btn_update'])) {
         ");
     }
 
+    // Sau khi các câu lệnh mysqli_query chạy xong:
+    $_SESSION['success_msg'] = "Cập nhật thông tin cá nhân thành công!"; // Lưu thông báo
+
     header("Location: index.php?mod=user&act=profile");
     exit;
 }
@@ -53,12 +56,16 @@ if (isset($_POST['btn_update'])) {
 
 
 <div class="admin-container">
-    <a href="index.php?mod=user&act=list" class="btn btn-Cancel">
-        ⬅ Quay lại
-    </a>
+    <?php if (isset($_SESSION['success_msg'])): ?>
+        <div id="flash-msg" class="alert-success">
+            <?php
+            echo $_SESSION['success_msg'];
+            unset($_SESSION['success_msg']); // Hiện xong thì xóa để không lặp lại
+            ?>
+        </div>
+    <?php endif; ?>
 
     <h2 class="admin-title">Thông tin cá nhân</h2>
-
     <form method="post" enctype="multipart/form-data" class="admin-form">
 
         <!-- AVATAR -->
@@ -112,6 +119,10 @@ if (isset($_POST['btn_update'])) {
             <button type="submit" name="btn_update" class="btn btn-OK">
                 💾 Lưu thay đổi
             </button>
+            <a href="index.php?mod=user&act=list" class="btn btn-Cancel">
+                ❌ Huỷ
+            </a>
         </div>
+
     </form>
 </div>

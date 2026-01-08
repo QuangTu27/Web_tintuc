@@ -1,11 +1,18 @@
 <?php
+include '../../../connect.php'; // Đường dẫn ra file connect của mày
+
 $id = $_GET['id'];
-// Xóa ảnh vật lý
-$res = mysqli_query($conn, "SELECT hinhanh FROM tbl_news WHERE id=$id");
+
+// Lấy tên ảnh để xóa file
+$res = mysqli_query($conn, "SELECT hinhanh FROM tbl_news WHERE id = '$id'");
 $row = mysqli_fetch_array($res);
-unlink("../images/news/".$row['hinhanh']);
+
+if($row['hinhanh'] != '' && file_exists('../../../images/'.$row['hinhanh'])){
+    unlink('../../../images/'.$row['hinhanh']);
+}
 
 // Xóa trong database
-mysqli_query($conn, "DELETE FROM tbl_news WHERE id=$id");
-header("location: index.php?mod=tintuc&act=list");
+mysqli_query($conn, "DELETE FROM tbl_news WHERE id = '$id'");
+
+header('Location: ../../index.php?mod=tintuc&act=list');
 ?>

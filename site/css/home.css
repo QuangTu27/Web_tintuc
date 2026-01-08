@@ -1,90 +1,143 @@
 /* =======================================================
-   ADS SYSTEM STYLES (BANNER DỌC BÁM DÍNH)
+   ADS SYSTEM STYLES (CẬP NHẬT SLIDESHOW & VIDEO)
    ======================================================= */
 
 /* 1. LAYOUT CHUNG */
 .main-wrapper {
   display: flex;
-  gap: 30px; /* Khoảng cách giữa nội dung và sidebar */
+  gap: 30px;
   margin-top: 20px;
   margin-bottom: 40px;
-  align-items: flex-start; /* Quan trọng để sticky hoạt động */
+  align-items: flex-start;
 }
 
-/* 2. SIDEBAR STICKY (BÁM CỘT) */
+/* 2. SIDEBAR STICKY */
 .sidebar-area {
   width: 300px;
   flex-shrink: 0;
-  position: sticky; /* Kích hoạt chế độ bám dính */
-  top: 20px; /* Cách mép trên màn hình 20px khi cuộn xuống */
+  position: sticky;
+  top: 20px;
   z-index: 10;
 }
 
-/* 3. WIDGET ADS (BANNER DỌC) */
-.widget-ads {
-  background: transparent; /* Bỏ nền trắng nếu muốn banner nổi bật */
-  padding: 0;
-  margin-bottom: 20px;
-  box-shadow: none; /* Bỏ đổ bóng khung widget */
-  border: none;
-  text-align: center;
+/* --- TIN TỨC--- */
+.news-thumb-frame {
+  flex: 0 0 240px;
+  width: 240px;
+  height: 150px;
+  background: #f0f0f0;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
-.widget-ads .ads-item {
-  display: block;
-  margin-bottom: 15px;
-}
-
-.widget-ads img {
-  width: 100%; /* Full width cột sidebar (300px) */
-  height: auto; /* Chiều cao tự động theo tỉ lệ ảnh gốc */
-  min-height: 500px; /* (Tùy chọn) Nếu muốn ép chiều cao tối thiểu cho giống banner dọc */
+.news-thumb-frame img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 4px;
-  display: block;
+  transition: 0.3s;
 }
 
-/* 4. ADS TOP & FOOTER (BANNER NGANG) */
-.home-top-ads,
-.home-footer-ads {
+.news-item:hover img {
+  transform: scale(1.05);
+}
+
+.news-item {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+
+.news-info h3 a:hover {
+  color: #007bff !important;
+}
+
+/* ADS*/
+.ads-slider {
+  position: relative;
+  width: 100%;
+  min-height: 250px; /* Chiều cao tối thiểu để khung không bị sập khi chưa load file */
+  margin-bottom: 20px;
+}
+
+/* KHỐNG CHẾ QUẢNG CÁO INLINE (Giữa nội dung) */
+.ads-inline .ads-slider {
+  max-width: 800px; /* Thu hẹp chiều ngang */
   margin: 20px auto;
-  max-width: 1100px; /* Chiều rộng chuẩn container */
-  text-align: center;
 }
 
+.ads-inline img,
+.ads-inline video {
+  max-height: 250px;
+  object-fit: contain; /* Giữ nguyên tỷ lệ ảnh, không bị cắt mất chữ */
+  background: #f4f4f4; /* Tạo nền cho khoảng trắng nếu ảnh ngắn */
+}
+
+/* Các item quảng cáo nằm chồng lên nhau */
+.ads-slider .ads-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0; /* Mặc định ẩn bằng độ trong suốt */
+  visibility: hidden;
+  transition: opacity 0.8s ease-in-out; /* Hiệu ứng mượt */
+  z-index: 1;
+}
+
+/* Khi có class active sẽ hiện lên */
+.ads-slider .ads-item.active {
+  position: relative; /* Item đang chạy sẽ giữ chỗ cho khung slider */
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+}
+
+/* 4. ĐỊNH DẠNG MEDIA (ẢNH & VIDEO) */
+.ads-slider img,
+.ads-slider video,
+.ads-inline img,
+.ads-inline video,
 .home-top-ads img,
-.home-footer-ads img {
-  max-width: 100%;
+.home-top-ads video,
+.home-footer-ads img,
+.home-footer-ads video {
+  width: 100%;
   height: auto;
   border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: block;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* 5. ADS INLINE (CHÈN GIỮA NỘI DUNG) */
+/* Riêng banner dọc sidebar có thể ép chiều cao tối thiểu */
+.sidebar-area .ads-slider img,
+.sidebar-area .ads-slider video {
+  min-height: 400px;
+}
+
+/* 5. ADS TOP, FOOTER & INLINE */
+.home-top-ads,
+.home-footer-ads,
 .ads-inline {
-  margin: 30px 0;
+  margin: 20px auto;
+  max-width: 1100px;
   text-align: center;
-  width: 100%;
   clear: both;
 }
 
-.ads-inline img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-/* Responsive cho Mobile: Sidebar sẽ đẩy xuống dưới và bỏ sticky */
+/* Responsive cho Mobile */
 @media (max-width: 991px) {
   .main-wrapper {
     flex-direction: column;
   }
   .sidebar-area {
     width: 100%;
-    position: static; /* Tắt sticky trên mobile */
+    position: static;
   }
-  .widget-ads img {
-    min-height: auto; /* Bỏ chiều cao tối thiểu trên mobile */
+  .sidebar-area .ads-slider img,
+  .sidebar-area .ads-slider video {
+    min-height: auto;
   }
 }

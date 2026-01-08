@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 include 'connect.php';
 
@@ -21,8 +23,8 @@ include 'site/header.php';
 //mapping url
 $routes = [
     'home'           => 'site/pages/home.php',
-    'tintuc'         => 'site/pages/tintuc.php',
-    'chitiet_tintuc' => 'site/pages/chitiet_tintuc.php',
+    'tintuc'         => 'site/pages/news/tintuc.php',
+    'chitiet_tintuc' => 'site/pages/news/chitiet_tintuc.php', // Cấu trúc: site -> pages -> news -> file
     'danhmuc'        => 'site/pages/danhmuc.php',
 
     'dangky'         => 'site/pages/auth/dangky.php',
@@ -37,7 +39,6 @@ $routes = [
     'bookmark_delete' => 'site/pages/bookmark/bookmark_delete.php',
     'bookmark_list'  => 'site/pages/bookmark/bookmark_list.php',
 ];
-
 
 // 2. Điều hướng nội dung (Router đơn giản)
 // Mặc định vào trang home

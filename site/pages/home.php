@@ -1,132 +1,115 @@
 <?php
+// Kết nối CSDL - Giữ nguyên đường dẫn của mày
 include_once($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
 /* =================================================
-   TRUY VẤN ADS - Không dùng LIMIT để lấy hết phục vụ Slideshow
+   1. TRUY VẤN DỮ LIỆU
    ================================================= */
-$sql_ads_top     = "SELECT * FROM tbl_ads WHERE position='top_home' AND status='hien'";
+$sql_ads_top     = "SELECT * FROM tbl_ads WHERE vitri='banner_top' AND trangthai='hien'";
 $res_ads_top     = mysqli_query($conn, $sql_ads_top);
 
-$sql_ads_sidebar = "SELECT * FROM tbl_ads WHERE position='sidebar_right' AND status='hien'";
+$sql_ads_sidebar = "SELECT * FROM tbl_ads WHERE vitri='sidebar_right' AND trangthai='hien'";
 $res_ads_sidebar = mysqli_query($conn, $sql_ads_sidebar);
 
-$sql_ads_inline  = "SELECT * FROM tbl_ads WHERE position='inline_home' AND status='hien'";
-$res_ads_inline  = mysqli_query($conn, $sql_ads_inline);
+$sql_news = "SELECT * FROM tbl_news ORDER BY ngaydang DESC LIMIT 10";
+$res_news = mysqli_query($conn, $sql_news);
 
-$sql_ads_footer  = "SELECT * FROM tbl_ads WHERE position='footer_home' AND status='hien'";
-$res_ads_footer  = mysqli_query($conn, $sql_ads_footer);
-
-/**
- * Hàm hỗ trợ hiển thị Media
- */
-function renderAdsMedia($ad)
-{
-    $filePath = "/Web_tintuc/images/ads/" . $ad['media_file'];
-    if ($ad['media_type'] === 'video') {
-        return '
-            <video autoplay muted loop playsinline class="ads-video">
-                <source src="' . $filePath . '" type="video/mp4">
-            </video>';
-    } else {
-        // Không cần inline style nữa, để CSS xử lý
-        return '<img src="' . $filePath . '" alt="' . htmlspecialchars($ad['title']) . '">';
-    }
-}
+$sql_top_views = "SELECT * FROM tbl_news ORDER BY view_count DESC LIMIT 5";
+$res_top_views = mysqli_query($conn, $sql_top_views);
 ?>
 
-<?php if (mysqli_num_rows($res_ads_top) > 0): ?>
-    <div class="home-top-ads container">
-        <div class="ads-slider" data-speed="5000">
-            <?php $i = 0;
-            while ($ad = mysqli_fetch_assoc($res_ads_top)): ?>
-                <div class="ads-item <?= ($i++ == 0) ? 'active' : '' ?>">
-                    <a href="<?= $ad['link'] ?>" target="_blank"><?= renderAdsMedia($ad) ?></a>
-                </div>
-            <?php endwhile; ?>
-        </div>
+<style>
+    /* Style giữ nguyên như mày mong muốn */
+    .news-thumb-frame {
+        flex: 0 0 240px;
+        width: 240px;
+        height: 150px;
+        background: #f0f0f0;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+    .news-thumb-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.3s;
+    }
+    .news-item:hover img { transform: scale(1.05); }
+    .news-item { display: flex; gap: 20px; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+    .news-info h3 a:hover { color: #007bff !important; }
+</style>
+
+<?php if ($res_ads_top && mysqli_num_rows($res_ads_top) > 0): ?>
+    <div class="container" style="margin: 10px auto; max-width: 1200px;">
+        <?php while ($ad = mysqli_fetch_assoc($res_ads_top)): ?>
+            <a href="<?= $ad['link_lien_ket'] ?>" target="_blank">
+                <img src="images/ads/<?= $ad['hinh_anh'] ?>" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 8px;">
+            </a>
+        <?php endwhile; ?>
     </div>
 <?php endif; ?>
 
-<div class="container main-wrapper">
-    <div class="content-area">
-        <h2 class="widget-title">TIN MỚI NHẤT</h2>
-        <div class="news-grid">
-            <div style="height: 500px; background: #f9f9f9; border: 1px dashed #ddd; display: flex; align-items: center; justify-content: center; color: #999; margin-bottom: 20px;">
-                Khu vực hiển thị danh sách tin tức
-            </div>
-
-            <?php if (mysqli_num_rows($res_ads_inline) > 0): ?>
-                <div class="ads-inline">
-                    <div class="ads-slider" data-speed="5000">
-                        <?php $i = 0;
-                        while ($ad = mysqli_fetch_assoc($res_ads_inline)): ?>
-                            <div class="ads-item <?= ($i++ == 0) ? 'active' : '' ?>">
-                                <a href="<?= $ad['link'] ?>" target="_blank"><?= renderAdsMedia($ad) ?></a>
+<div class="container main-wrapper" style="display: flex; gap: 30px; margin: 20px auto; max-width: 1200px; align-items: flex-start;">
+    
+    <div class="content-area" style="flex: 2;">
+        <h2 style="border-left: 5px solid #007bff; padding-left: 15px; margin-bottom: 30px; font-weight: bold; font-size: 24px;">TIN MỚI NHẤT</h2>
+        
+        <div class="news-list">
+            <?php if ($res_news && mysqli_num_rows($res_news) > 0): ?>
+                <?php while ($news = mysqli_fetch_assoc($res_news)): ?>
+                    <div class="news-item">
+                        <div class="news-thumb-frame">
+                            <a href="index.php?p=chitiet_tintuc&id=<?= $news['id'] ?>">
+                                <img src="images/news/<?= $news['hinhanh'] ?>" 
+                                     onerror="this.src='images/default_news.jpg'">
+                            </a>
+                        </div>
+                        <div class="news-info">
+                            <h3 style="margin: 0 0 10px 0;">
+                                <a href="index.php?p=chitiet_tintuc&id=<?= $news['id'] ?>" style="text-decoration: none; color: #222; font-weight: bold; font-size: 19px; line-height: 1.3; display: block;">
+                                    <?= htmlspecialchars($news['tieude']) ?>
+                                </a>
+                            </h3>
+                            <p style="color: #666; font-size: 14.5px; line-height: 1.5; margin-bottom: 10px;">
+                                <?php 
+                                    $desc = !empty($news['tomtat']) ? $news['tomtat'] : $news['noidung'];
+                                    echo mb_substr(strip_tags($desc), 0, 130, 'UTF-8') . '...';
+                                ?>
+                            </p>
+                            <div style="font-size: 12px; color: #999;">
+                                <span>📅 <?= date('d/m/Y', strtotime($news['ngaydang'])) ?></span>
+                                <span style="margin-left: 15px;">👁️ <?= number_format($news['view_count']) ?> lượt xem</span>
                             </div>
-                        <?php endwhile; ?>
+                        </div>
                     </div>
-                </div>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <p>Đang cập nhật tin tức...</p>
             <?php endif; ?>
         </div>
     </div>
 
-    <aside class="sidebar-area">
-        <div class="widget">
-            <h3 class="widget-title">TIN XEM NHIỀU</h3>
+    <aside style="flex: 1; position: sticky; top: 10px;">
+        <div style="border: 1px solid #eee; border-radius: 8px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+            <h3 style="background: #333; color: #fff; padding: 12px; margin: 0; font-size: 16px; text-transform: uppercase;">🔥 Tin xem nhiều</h3>
+            <div style="padding: 15px; background: #fff;">
+                <?php while ($top = mysqli_fetch_assoc($res_top_views)): ?>
+                    <div style="display: flex; gap: 12px; margin-bottom: 15px; align-items: flex-start; border-bottom: 1px dashed #eee; padding-bottom: 10px;">
+                        <img src="images/news/<?= $top['hinhanh'] ?>" style="width: 80px; height: 55px; object-fit: cover; border-radius: 4px;" onerror="this.src='images/default_news.jpg'">
+                        <a href="index.php?p=chitiet_tintuc&id=<?= $top['id'] ?>" style="font-size: 13.5px; text-decoration: none; color: #333; font-weight: 500; line-height: 1.4;">
+                            <?= mb_substr($top['tieude'], 0, 50, 'UTF-8') ?>...
+                        </a>
+                    </div>
+                <?php endwhile; ?>
+            </div>
         </div>
 
-        <?php if (mysqli_num_rows($res_ads_sidebar) > 0): ?>
-            <div class="widget-ads">
-                <div class="ads-slider" data-speed="7000">
-                    <?php $i = 0;
-                    while ($ad = mysqli_fetch_assoc($res_ads_sidebar)): ?>
-                        <div class="ads-item <?= ($i++ == 0) ? 'active' : '' ?>">
-                            <a href="<?= $ad['link'] ?>" target="_blank"><?= renderAdsMedia($ad) ?></a>
-                        </div>
-                    <?php endwhile; ?>
-                </div>
-            </div>
+        <?php if ($res_ads_sidebar && mysqli_num_rows($res_ads_sidebar) > 0): ?>
+            <?php while ($ad = mysqli_fetch_assoc($res_ads_sidebar)): ?>
+                <a href="<?= $ad['link_lien_ket'] ?>" target="_blank" style="display: block; margin-bottom: 15px;">
+                    <img src="images/ads/<?= $ad['hinh_anh'] ?>" style="width: 100%; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                </a>
+            <?php endwhile; ?>
         <?php endif; ?>
-
     </aside>
 </div>
-
-<?php if (mysqli_num_rows($res_ads_footer) > 0): ?>
-    <div class="home-footer-ads container">
-        <div class="ads-slider" data-speed="8000">
-            <?php $i = 0;
-            while ($ad = mysqli_fetch_assoc($res_ads_footer)): ?>
-                <div class="ads-item <?= ($i++ == 0) ? 'active' : '' ?>">
-                    <a href="<?= $ad['link'] ?>" target="_blank"><?= renderAdsMedia($ad) ?></a>
-                </div>
-            <?php endwhile; ?>
-        </div>
-    </div>
-<?php endif; ?>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const sliders = document.querySelectorAll('.ads-slider');
-
-        sliders.forEach(slider => {
-            const items = slider.querySelectorAll('.ads-item');
-            if (items.length <= 1) return;
-
-            let currentIndex = 0;
-            const speed = parseInt(slider.getAttribute('data-speed')) || 5000;
-
-            setInterval(() => {
-                items[currentIndex].classList.remove('active');
-                currentIndex = (currentIndex + 1) % items.length;
-                items[currentIndex].classList.add('active');
-
-                // Nếu slide mới là video, phát lại từ đầu
-                const video = items[currentIndex].querySelector('video');
-                if (video) {
-                    video.currentTime = 0;
-                    video.play();
-                }
-            }, speed);
-        });
-    });
-</script>

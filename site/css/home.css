@@ -20,7 +20,40 @@
   z-index: 10;
 }
 
-/* 3. CẤU TRÚC SLIDER (MỚI) */
+/* --- TIN TỨC--- */
+.news-thumb-frame {
+  flex: 0 0 240px;
+  width: 240px;
+  height: 150px;
+  background: #f0f0f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.news-thumb-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.3s;
+}
+
+.news-item:hover img {
+  transform: scale(1.05);
+}
+
+.news-item {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+
+.news-info h3 a:hover {
+  color: #007bff !important;
+}
+
+/* ADS*/
 .ads-slider {
   position: relative;
   width: 100%;

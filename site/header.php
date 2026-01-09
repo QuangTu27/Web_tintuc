@@ -168,7 +168,7 @@ if (isset($_SESSION['user_login'])) {
                 </nav>
 
                 <a href="javascript:void(0)" id="btnOpenMenu" class="nav-btn-all">
-                    <i class="fas fa-bars"></i>
+                    <i class="fas fa-bars" title="Tất cả chuyên mục"></i>
                 </a>
 
     </header>

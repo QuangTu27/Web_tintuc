@@ -216,62 +216,66 @@ header.hide-top {
   padding: 0 10px; /* Padding cho link cấp 1 */
   line-height: 50px; /* Căn giữa theo chiều cao header */
 }
-
-/* --- MENU CON (SUB MENU) --- */
-/* Dùng selector cụ thể (.nav-categories ul.sub-menu) để đè style cũ */
+/* FIX MENU CON (SUB-MENU) - CHUẨN KHOẢNG CÁCH*/
+/* 1. KHUNG MENU CON */
 .nav-categories ul.sub-menu {
-  display: none !important; /* QUAN TRỌNG: Ép buộc ẩn */
+  display: none; /* Ẩn mặc định */
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 220px;
+  min-width: 240px; /* Chiều rộng tối thiểu */
   background: #fff;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-  border-top: 3px solid #0a9e54;
-  padding: 0 !important;
-  flex-direction: column !important;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* Đổ bóng nhẹ */
+  border-top: 3px solid #00b686; /* Viền xanh trên cùng */
+  padding: 0;
+  margin: 0;
+  list-style: none;
   z-index: 9999;
   border-radius: 0 0 4px 4px;
-  opacity: 0; /* Ẩn hoàn toàn khỏi mắt */
-  visibility: hidden; /* Không nhận sự kiện chuột khi ẩn */
 }
-
-/* --- HIỆN MENU KHI DI CHUỘT (HOVER) --- */
 .nav-categories li:hover > ul.sub-menu {
-  display: flex !important; /* QUAN TRỌNG: Ép buộc hiện */
-  opacity: 1;
-  visibility: visible;
-  animation: fadeInUp 0.2s ease forwards; /* Chạy hiệu ứng */
+  display: block; /* Hiện ra */
+  animation: fadeInUp 0.2s ease forwards;
 }
 
-/* Item con */
+/* 3. CẤU TRÚC ITEM CON (LI) */
 .nav-categories ul.sub-menu li {
+  display: block;
   width: 100%;
   margin: 0;
-  display: block; /* Đảm bảo item con nằm dọc */
+  padding: 0;
 }
 
-/* Link con */
+/* 4. STYLE CHO LINK CON (A) */
 .nav-categories ul.sub-menu li a {
   display: block;
-  padding: 2px 20px;
-  line-height: normal;
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: none;
-  color: #333;
-  border-bottom: 1px solid #f1f1f1;
-  white-space: nowrap;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  text-decoration: none;
+  text-transform: uppercase;
+  border-bottom: 1px solid #eeeeee;
+
+  background-color: #fff;
+  transition: all 0.2s ease;
+  line-height: 1.4; /* Chiều cao dòng */
+  text-align: left;
 }
 
-/* Hover link con */
+/* 5. HIỆU ỨNG DI CHUỘT VÀO LINK CON */
 .nav-categories ul.sub-menu li a:hover {
-  background: #f9f9f9;
-  color: #0a9e54;
+  background-color: #f9f9f9;
+  color: #00b686;
   padding-left: 25px;
 }
 
-/* Animation trượt lên nhẹ */
+/* 6. XÓA ĐƯỜNG KẺ Ở MỤC CUỐI */
+.nav-categories ul.sub-menu li:last-child a {
+  border-bottom: none;
+}
+
+/* 7. ANIMATION TRƯỢT LÊN */
 @keyframes fadeInUp {
   from {
     opacity: 0;

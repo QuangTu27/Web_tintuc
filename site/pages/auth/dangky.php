@@ -44,7 +44,7 @@ if (isset($_POST['btn_register'])) {
     if (mysqli_query($conn, $sql)) {
         echo "<script>
             alert('Đăng ký thành công! Vui lòng đăng nhập.');
-            window.location.href = '../../index.php';
+            window.location.href = 'Web_tintuc/index.php';
         </script>";
     } else {
         echo "<script>alert('Lỗi: " . mysqli_error($conn) . "'); window.history.back();</script>";

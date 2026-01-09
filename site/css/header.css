@@ -283,12 +283,6 @@ header.hide-top {
   }
 }
 
-/* Mũi tên xoay khi hover */
-.nav-categories li:hover > a i {
-  transform: rotate(180deg);
-  transition: transform 0.2s;
-}
-
 /* FULL MENU OVERLAY (MENU TOÀN TRANG) */
 #full-menu-overlay {
   position: fixed;

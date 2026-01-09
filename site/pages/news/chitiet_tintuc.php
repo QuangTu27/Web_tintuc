@@ -73,17 +73,14 @@ if ($id > 0 && isset($_SESSION['user_id'])) {
     <article class="news-detail" style="background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
 
         <nav style="font-size: 14px; color: #888; margin-bottom: 20px;">
-            <a href="index.php" style="color: #007bff; text-decoration: none;">Trang chủ</a>
-            <span style="margin: 0 5px;">/</span>
-
             <?php if (!empty($row['parent_name'])): ?>
-                <a href="index.php?p=danhmuc&id=<?= $row['parent_id'] ?>" style="color: #007bff; text-decoration: none;">
+                <a href="index.php?p=danhmuc&id=<?= $row['parent_id'] ?>" style="color: #333; text-decoration: none;">
                     <?= htmlspecialchars($row['parent_name']) ?>
                 </a>
-                <span style="margin: 0 5px;">/</span>
+                <span style="margin: 0 5px;">></span>
             <?php endif; ?>
 
-            <a href="index.php?p=danhmuc&id=<?= $row['cat_id'] ?>" style="color: #333; text-decoration: none; font-weight: 500;">
+            <a href="index.php?p=danhmuc&id=<?= $row['cat_id'] ?>" style="color: #333; text-decoration: none; font-weight: 600;">
                 <?= htmlspecialchars($row['cat_name'] ?? 'Tin tức') ?>
             </a>
         </nav>

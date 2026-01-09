@@ -1,11 +1,11 @@
 <?php
-// 1. KIỂM TRA ĐĂNG NHẬP
+// KIỂM TRA ĐĂNG NHẬP
 if (!isset($_SESSION['user_login'])) {
     echo "<script>window.location.href='index.php';</script>";
     exit;
 }
 
-// 2. LẤY THÔNG TIN USER
+// LẤY THÔNG TIN USER
 $user_id = $_SESSION['user_id'];
 $sql = "SELECT * FROM tbl_users WHERE id = $user_id";
 $result = mysqli_query($conn, $sql);
@@ -15,9 +15,7 @@ $user = mysqli_fetch_assoc($result);
 $avatar_img = !empty($user['avatar']) ? $user['avatar'] : 'default.png';
 $join_date = date('m/Y', strtotime($user['created_at']));
 
-// =================================================================
-// 3. XỬ LÝ CẬP NHẬT DỮ LIỆU
-// =================================================================
+// XỬ LÝ CẬP NHẬT DỮ LIỆU
 
 // A. Cập nhật Avatar
 if (isset($_POST['btn_update_avatar'])) {
@@ -76,6 +74,9 @@ if (isset($_POST['btn_update_pass'])) {
         $show_pass_form = true;
     }
 }
+
+// XÁC ĐỊNH TAB HIỆN TẠI 
+$act = isset($_GET['act']) ? $_GET['act'] : 'general'; // Mặc định là 'general' (Thông tin chung)
 ?>
 
 <link rel="stylesheet" href="/Web_tintuc/site/css/profile.css">
@@ -100,10 +101,22 @@ if (isset($_POST['btn_update_pass'])) {
             </div>
 
             <ul class="profile-menu">
-                <li class="active"><a href="index.php?p=thongtincanhan">Thông tin chung</a></li>
-                <li><a href="index.php?p=my_comments">Ý kiến của bạn (0)</a></li>
-                <li><a href="index.php?p=tin_da_luu">Tin đã lưu</a></li>
-                <li><a href="index.php?p=tin_da_xem">Tin đã xem</a></li>
+                <li class="<?= ($act == 'general') ? 'active' : '' ?>">
+                    <a href="index.php?p=thongtincanhan&act=general">Thông tin chung</a>
+                </li>
+
+                <li class="<?= ($act == 'my_comments') ? 'active' : '' ?>">
+                    <a href="index.php?p=thongtincanhan&act=my_comments">Ý kiến của bạn (0)</a>
+                </li>
+
+                <li class="<?= ($act == 'bookmark_list') ? 'active' : '' ?>">
+                    <a href="index.php?p=thongtincanhan&act=bookmark_list">Tin đã lưu</a>
+                </li>
+
+                <li class="<?= ($act == 'tin_da_xem') ? 'active' : '' ?>">
+                    <a href="index.php?p=thongtincanhan&act=tin_da_xem">Tin đã xem</a>
+                </li>
+
                 <li class="logout-item">
                     <a href="index.php?act=logout" onclick="return confirm('Đăng xuất?')">Thoát <i class="fas fa-sign-out-alt"></i></a>
                 </li>
@@ -117,118 +130,146 @@ if (isset($_POST['btn_update_pass'])) {
     </div>
 
     <div class="profile-content">
-        <h2 class="page-title">Thông tin tài khoản</h2>
 
-        <div class="info-section">
-            <div class="info-row avatar-row" id="view-avatar">
-                <div>
-                    <span class="info-label">Ảnh đại diện</span>
-                    <div>
-                        <img src="/Web_tintuc/images/avatars/<?= $avatar_img ?>" class="avatar-sm">
+        <?php
+        switch ($act) {
+            case 'bookmark_list':
+                // Gọi file tin đã lưu vào đây
+                include 'bookmark_list.php';
+                break;
+
+            case 'tin_da_xem':
+                // Gọi file tin đã xem vào đây
+                include 'tin_da_xem.php';
+                break;
+
+            case 'my_comments':
+                echo "<h3>Chức năng bình luận đang phát triển...</h3>";
+                break;
+
+            case 'general':
+            default:
+                // HIỂN THỊ FORM THÔNG TIN CHUNG (Code cũ của bạn)
+        ?>
+                <div class="profile-content">
+                    <h2 class="page-title">Thông tin tài khoản</h2>
+
+                    <div class="info-section">
+                        <div class="info-row avatar-row" id="view-avatar">
+                            <div>
+                                <span class="info-label">Ảnh đại diện</span>
+                                <div>
+                                    <img src="/Web_tintuc/images/avatars/<?= $avatar_img ?>" class="avatar-sm">
+                                </div>
+                            </div>
+                            <a href="javascript:void(0)" class="btn-change" onclick="toggleEdit('avatar')">Thay ảnh đại diện</a>
+                        </div>
+
+                        <div class="edit-container" id="edit-avatar">
+                            <div class="mb-10">
+                                <span class="info-label">Ảnh đại diện</span>
+                                <span class="btn-close-edit" onclick="toggleEdit('avatar')">Đóng</span>
+                            </div>
+                            <form method="POST" enctype="multipart/form-data" class="avatar-edit-box">
+                                <div>
+                                    <img src="/Web_tintuc/images/avatars/<?= $avatar_img ?>" class="avatar-md">
+                                </div>
+                                <input type="file" name="avatar_file" id="file-upload" required class="form-control">
+                                <button type="submit" name="btn_update_avatar" class="btn-save">Lưu thay đổi</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="info-section">
+                        <div class="info-row" id="view-name">
+                            <div>
+                                <span class="info-label">Họ tên</span>
+                                <span class="info-value">
+                                    <?= !empty($user['hoten']) ? htmlspecialchars($user['hoten']) : 'Chưa có dữ liệu' ?>
+                                </span>
+                            </div>
+                            <a href="javascript:void(0)" class="btn-change" onclick="toggleEdit('name')">Thay đổi</a>
+                        </div>
+
+                        <div class="edit-container" id="edit-name">
+                            <div class="mb-10">
+                                <span class="info-label">Họ tên</span>
+                                <span class="btn-close-edit" onclick="toggleEdit('name')">Đóng</span>
+                            </div>
+                            <form method="POST" class="normal-edit-box">
+                                <label class="form-label">Nhập họ tên</label>
+                                <input type="text" name="hoten" class="form-control" value="<?= htmlspecialchars($user['hoten']) ?>" placeholder="Nhập họ và tên">
+                                <button type="submit" name="btn_update_name" class="btn-save">Đổi tên</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="info-section">
+                        <div class="info-row" id="view-email">
+                            <div>
+                                <span class="info-label">Email</span>
+                                <span class="info-value">
+                                    <?= !empty($user['email']) ? $user['email'] : 'Chưa cập nhật email' ?>
+                                </span>
+                            </div>
+                            <a href="javascript:void(0)" class="btn-change" onclick="toggleEdit('email')">Thay đổi</a>
+                        </div>
+
+                        <div class="edit-container" id="edit-email">
+                            <div class="mb-10">
+                                <span class="info-label">Email</span>
+                                <span class="btn-close-edit" onclick="toggleEdit('email')">Đóng</span>
+                            </div>
+                            <form method="POST" class="normal-edit-box">
+                                <label class="form-label">Nhập email mới</label>
+                                <input type="email" name="new_email" class="form-control" value="<?= $user['email'] ?>" placeholder="Nhập email mới" required>
+                                <button type="submit" name="btn_update_email" class="btn-save">Đổi email</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="info-section">
+                        <div class="info-row <?= $show_pass_form ? 'hidden' : '' ?>" id="view-pass">
+                            <div>
+                                <span class="info-label">Mật khẩu</span>
+                                <span class="info-value">•••••••••••••</span>
+                            </div>
+                            <a href="javascript:void(0)" class="btn-change" onclick="toggleEdit('pass')">Thay đổi</a>
+                        </div>
+
+                        <div class="edit-container <?= $show_pass_form ? 'd-block' : '' ?>" id="edit-pass">
+                            <div class="mb-10">
+                                <span class="info-label">Mật khẩu</span>
+                                <span class="btn-close-edit" onclick="toggleEdit('pass')">Đóng</span>
+                            </div>
+
+                            <form method="POST" class="normal-edit-box">
+                                <label class="form-label">Nhập mật khẩu hiện tại</label>
+                                <div class="password-wrapper">
+                                    <input type="password" id="old_pass" name="pass_old" class="form-control"
+                                        value="<?= isset($_POST['pass_old']) ? htmlspecialchars($_POST['pass_old']) : '' ?>" required>
+                                    <span class="toggle-text" onclick="togglePassword('old_pass', this)">Ẩn</span>
+                                </div>
+
+                                <?php if ($error_pass_old != ""): ?>
+                                    <span class="error-msg"><?= $error_pass_old ?></span>
+                                <?php endif; ?>
+
+                                <label class="form-label">Nhập mật khẩu mới</label>
+                                <div class="password-wrapper">
+                                    <input type="password" id="new_pass" name="pass_new" class="form-control" required>
+                                    <span class="toggle-text" onclick="togglePassword('new_pass', this)">Ẩn</span>
+                                </div>
+
+                                <div class="flex-between">
+                                    <button type="submit" name="btn_update_pass" class="btn-save">Đổi mật khẩu</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <a href="javascript:void(0)" class="btn-change" onclick="toggleEdit('avatar')">Thay ảnh đại diện</a>
-            </div>
+        <?php
+                break; // Kết thúc case 'general'
+        }
+        ?>
 
-            <div class="edit-container" id="edit-avatar">
-                <div class="mb-10">
-                    <span class="info-label">Ảnh đại diện</span>
-                    <span class="btn-close-edit" onclick="toggleEdit('avatar')">Đóng</span>
-                </div>
-                <form method="POST" enctype="multipart/form-data" class="avatar-edit-box">
-                    <div>
-                        <img src="/Web_tintuc/images/avatars/<?= $avatar_img ?>" class="avatar-md">
-                    </div>
-                    <input type="file" name="avatar_file" id="file-upload" required class="form-control">
-                    <button type="submit" name="btn_update_avatar" class="btn-save">Lưu thay đổi</button>
-                </form>
-            </div>
-        </div>
-        <div class="info-section">
-            <div class="info-row" id="view-name">
-                <div>
-                    <span class="info-label">Họ tên</span>
-                    <span class="info-value">
-                        <?= !empty($user['hoten']) ? htmlspecialchars($user['hoten']) : 'Chưa có dữ liệu' ?>
-                    </span>
-                </div>
-                <a href="javascript:void(0)" class="btn-change" onclick="toggleEdit('name')">Thay đổi</a>
-            </div>
-
-            <div class="edit-container" id="edit-name">
-                <div class="mb-10">
-                    <span class="info-label">Họ tên</span>
-                    <span class="btn-close-edit" onclick="toggleEdit('name')">Đóng</span>
-                </div>
-                <form method="POST" class="normal-edit-box">
-                    <label class="form-label">Nhập họ tên</label>
-                    <input type="text" name="hoten" class="form-control" value="<?= htmlspecialchars($user['hoten']) ?>" placeholder="Nhập họ và tên">
-                    <button type="submit" name="btn_update_name" class="btn-save">Đổi tên</button>
-                </form>
-            </div>
-        </div>
-        <div class="info-section">
-            <div class="info-row" id="view-email">
-                <div>
-                    <span class="info-label">Email</span>
-                    <span class="info-value">
-                        <?= !empty($user['email']) ? $user['email'] : 'Chưa cập nhật email' ?>
-                    </span>
-                </div>
-                <a href="javascript:void(0)" class="btn-change" onclick="toggleEdit('email')">Thay đổi</a>
-            </div>
-
-            <div class="edit-container" id="edit-email">
-                <div class="mb-10">
-                    <span class="info-label">Email</span>
-                    <span class="btn-close-edit" onclick="toggleEdit('email')">Đóng</span>
-                </div>
-                <form method="POST" class="normal-edit-box">
-                    <label class="form-label">Nhập email mới</label>
-                    <input type="email" name="new_email" class="form-control" value="<?= $user['email'] ?>" placeholder="Nhập email mới" required>
-                    <button type="submit" name="btn_update_email" class="btn-save">Đổi email</button>
-                </form>
-            </div>
-        </div>
-        <div class="info-section">
-            <div class="info-row <?= $show_pass_form ? 'hidden' : '' ?>" id="view-pass">
-                <div>
-                    <span class="info-label">Mật khẩu</span>
-                    <span class="info-value">•••••••••••••</span>
-                </div>
-                <a href="javascript:void(0)" class="btn-change" onclick="toggleEdit('pass')">Thay đổi</a>
-            </div>
-
-            <div class="edit-container <?= $show_pass_form ? 'd-block' : '' ?>" id="edit-pass">
-                <div class="mb-10">
-                    <span class="info-label">Mật khẩu</span>
-                    <span class="btn-close-edit" onclick="toggleEdit('pass')">Đóng</span>
-                </div>
-
-                <form method="POST" class="normal-edit-box">
-                    <label class="form-label">Nhập mật khẩu hiện tại</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="old_pass" name="pass_old" class="form-control"
-                            value="<?= isset($_POST['pass_old']) ? htmlspecialchars($_POST['pass_old']) : '' ?>" required>
-                        <span class="toggle-text" onclick="togglePassword('old_pass', this)">Ẩn</span>
-                    </div>
-
-                    <?php if ($error_pass_old != ""): ?>
-                        <span class="error-msg"><?= $error_pass_old ?></span>
-                    <?php endif; ?>
-
-                    <label class="form-label">Nhập mật khẩu mới</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="new_pass" name="pass_new" class="form-control" required>
-                        <span class="toggle-text" onclick="togglePassword('new_pass', this)">Ẩn</span>
-                    </div>
-
-                    <div class="flex-between">
-                        <button type="submit" name="btn_update_pass" class="btn-save">Đổi mật khẩu</button>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
 </div>
 

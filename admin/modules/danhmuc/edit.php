@@ -88,11 +88,7 @@ if (isset($_POST['btn_update'])) {
 ?>
 
 <div class="admin-container">
-
     <div class="admin-header-inline">
-        <a href="index.php?mod=danhmuc&act=list" class="btn btn_back">
-            ⬅ Quay lại
-        </a>
         <h2 class="admin-title">CẬP NHẬT DANH MỤC</h2>
         <div style="width: 140px;"></div>
     </div>

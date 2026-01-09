@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();
+ob_start();
 include 'connect.php';
 
 //xử lý đăng xuất
@@ -24,7 +25,7 @@ include 'site/header.php';
 $routes = [
     'home'           => 'site/pages/home.php',
     'tintuc'         => 'site/pages/news/tintuc.php',
-    'chitiet_tintuc' => 'site/pages/news/chitiet_tintuc.php', // Cấu trúc: site -> pages -> news -> file
+    'chitiet_tintuc' => 'site/pages/news/chitiet_tintuc.php',
     'danhmuc'        => 'site/pages/danhmuc.php',
 
     'dangky'         => 'site/pages/auth/dangky.php',

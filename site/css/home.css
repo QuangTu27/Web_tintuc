@@ -69,7 +69,8 @@
 
 .ads-inline img,
 .ads-inline video {
-  max-height: 250px;
+  max-height: auto;
+  max-width: 50%;
   object-fit: contain; /* Giữ nguyên tỷ lệ ảnh, không bị cắt mất chữ */
   background: #f4f4f4; /* Tạo nền cho khoảng trắng nếu ảnh ngắn */
 }

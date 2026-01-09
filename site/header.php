@@ -26,9 +26,24 @@ function getSubCategories($items, $parentId)
 }
 
 // Xử lý thông tin User
-$avatar = !empty($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'default_avatar.png';
-$displayName = $_SESSION['user_name'] ?? 'Người dùng';
-$username = $_SESSION['user_username'] ?? $displayName;
+$avatar = 'default_avatar.png';
+$displayName = 'Người dùng';
+$username = 'Guest';
+
+if (isset($_SESSION['user_login'])) {
+    $u_id = $_SESSION['user_id'];
+    // Truy vấn lại thông tin mới nhất
+    $sql_user_info = "SELECT avatar, hoten, username FROM tbl_users WHERE id = $u_id";
+    $res_user_info = mysqli_query($conn, $sql_user_info);
+
+    if ($res_user_info && mysqli_num_rows($res_user_info) > 0) {
+        $u_data = mysqli_fetch_assoc($res_user_info);
+
+        $avatar = !empty($u_data['avatar']) ? $u_data['avatar'] : 'default_avatar.png';
+        $displayName = !empty($u_data['hoten']) ? $u_data['hoten'] : $u_data['username'];
+        $username = $u_data['username'];
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -76,16 +91,20 @@ $username = $_SESSION['user_username'] ?? $displayName;
                                 <span class="name-text"><?= htmlspecialchars($displayName) ?></span>
                                 <i class="fas fa-caret-down" style="font-size: 12px; color: white;"></i>
                             </div>
+
                             <ul class="profile-dropdown">
                                 <li class="dropdown-header">
                                     <img src="/Web_tintuc/images/avatars/<?= $avatar ?>?v=<?= time() ?>" class="avatar-large">
                                     <strong class="user-name-text"><?= htmlspecialchars($username) ?></strong>
                                 </li>
-                                <li><a href="index.php?p=thongtincanhan">Thông tin chung</a></li>
-                                <li><a href="index.php?p=my_comments">Ý kiến của bạn</a></li>
-                                <li><a href="index.php?p=tin_da_luu">Tin đã lưu</a></li>
-                                <li><a href="index.php?p=tin_da_xem">Tin đã xem</a></li>
+
+                                <li><a href="index.php?p=thongtincanhan&act=general">Thông tin chung</a></li>
+                                <li><a href="index.php?p=thongtincanhan&act=my_comments">Ý kiến của bạn</a></li>
+                                <li><a href="index.php?p=thongtincanhan&act=bookmark_list">Tin đã lưu</a></li>
+                                <li><a href="index.php?p=thongtincanhan&act=tin_da_xem">Tin đã xem</a></li>
+
                                 <li class="divider"></li>
+
                                 <li>
                                     <a href="index.php?act=logout" class="logout-link" onclick="return confirm('Bạn muốn đăng xuất?')">
                                         Thoát <i class="fas fa-sign-out-alt"></i>

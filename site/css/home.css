@@ -50,7 +50,7 @@
 }
 
 .news-info h3 a:hover {
-  color: #007bff !important;
+  color: #00b686 !important;
 }
 
 /* ADS*/
@@ -70,7 +70,7 @@
 .ads-inline img,
 .ads-inline video {
   max-height: auto;
-  max-width: 50%;
+  max-width: 30%;
   object-fit: contain; /* Giữ nguyên tỷ lệ ảnh, không bị cắt mất chữ */
   background: #f4f4f4; /* Tạo nền cho khoảng trắng nếu ảnh ngắn */
 }

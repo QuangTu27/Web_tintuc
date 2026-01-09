@@ -19,15 +19,6 @@
                 <div class="tab-item" onclick="switchTab('register')">Đăng ký</div>
             </div>
 
-            <div class="social-login">
-                <p>Đăng nhập với tài khoản</p>
-                <div class="social-icons">
-                    <button class="s-btn google"><i class="fab fa-google"></i></button>
-                    <button class="s-btn facebook"><i class="fab fa-facebook-f"></i></button>
-                    <button class="s-btn apple"><i class="fab fa-apple"></i></button>
-                </div>
-            </div>
-
             <form id="login-form" action="/Web_tintuc/site/pages/auth/dangnhap.php" method="POST" class="auth-form active">
                 <div class="input-group">
                     <label>TÊN ĐĂNG NHẬP *</label>

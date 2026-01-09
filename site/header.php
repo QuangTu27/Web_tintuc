@@ -144,9 +144,6 @@ if (isset($_SESSION['user_login'])) {
                                     <li class="<?= $hasChild ? 'has-child' : '' ?>">
                                         <a href="index.php?p=danhmuc&id=<?= $cat['id'] ?>">
                                             <?= htmlspecialchars($cat['name']) ?>
-                                            <?php if ($hasChild): ?>
-                                                <i class="fas fa-angle-down" style="font-size: 11px; margin-left: 4px;"></i>
-                                            <?php endif; ?>
                                         </a>
 
                                         <?php if ($hasChild): ?>
@@ -240,8 +237,6 @@ if (isset($_SESSION['user_login'])) {
                 body.style.overflow = '';
             }
         });
-
-        /* --- Code Sticky Header & Weather cũ giữ nguyên bên dưới --- */
     </script>
 
     <script>

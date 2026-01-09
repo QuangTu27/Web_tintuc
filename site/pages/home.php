@@ -68,7 +68,7 @@ function renderAdsMedia($ad)
 <div class="container main-wrapper" style="display: flex; gap: 30px; margin: 20px auto; max-width: 1200px; align-items: flex-start;">
 
     <div class="content-area" style="flex: 2;">
-        <h2 style="border-left: 5px solid #007bff; padding-left: 15px; margin-bottom: 30px; font-weight: bold; font-size: 24px;">TIN MỚI NHẤT</h2>
+        <h2 style="border-left: 5px solid #00b686; padding-left: 15px; margin-bottom: 30px; font-weight: bold; font-size: 24px;">TIN MỚI NHẤT</h2>
 
         <div class="news-list">
             <?php if ($res_news && mysqli_num_rows($res_news) > 0): ?>
@@ -126,14 +126,16 @@ function renderAdsMedia($ad)
         </div>
     </div>
 
-    <aside style="flex: 1; position: sticky; top: 10px;">
+    <aside style="flex: 0 0 300px; max-width: 300px; position: sticky; top: 10px;">
+
         <div style="border: 1px solid #eee; border-radius: 8px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
             <h3 style="background: #333; color: #fff; padding: 12px; margin: 0; font-size: 16px; text-transform: uppercase;">🔥 Tin xem nhiều</h3>
             <div style="padding: 15px; background: #fff;">
                 <?php while ($top = mysqli_fetch_assoc($res_top_views)): ?>
-                    <div style="display: flex; gap: 12px; margin-bottom: 15px; align-items: flex-start; border-bottom: 1px dashed #eee; padding-bottom: 10px;">
-                        <img src="images/news/<?= $top['hinhanh'] ?>" style="width: 80px; height: 55px; object-fit: cover; border-radius: 4px;" onerror="this.src='images/default_news.jpg'">
-                        <a href="index.php?p=chitiet_tintuc&id=<?= $top['id'] ?>" style="font-size: 13.5px; text-decoration: none; color: #333; font-weight: 500; line-height: 1.4;">
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px; align-items: flex-start; border-bottom: 1px dashed #eee; padding-bottom: 10px;">
+                        <img src="images/news/<?= $top['hinhanh'] ?>" style="width: 70px; height: 50px; object-fit: cover; border-radius: 4px; flex-shrink: 0;" onerror="this.src='images/default_news.jpg'">
+
+                        <a href="index.php?p=chitiet_tintuc&id=<?= $top['id'] ?>" style="font-size: 13px; text-decoration: none; color: #333; font-weight: 500; line-height: 1.4;">
                             <?= mb_substr($top['tieude'], 0, 50, 'UTF-8') ?>...
                         </a>
                     </div>
@@ -143,7 +145,7 @@ function renderAdsMedia($ad)
 
         <?php if (mysqli_num_rows($res_ads_sidebar) > 0): ?>
             <div class="widget-ads">
-                <div class="ads-slider" data-speed="4000">
+                <div class="ads-slider" data-speed="9000">
                     <?php $k = 0;
                     while ($ad = mysqli_fetch_assoc($res_ads_sidebar)): ?>
                         <div class="ads-item <?= ($k++ == 0) ? 'active' : '' ?>">

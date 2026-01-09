@@ -6,6 +6,7 @@ include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 // 1. KIỂM TRA QUYỀN (Chỉ Admin/Editor mới được duyệt)
 if (!isset($_SESSION['admin_role']) || ($_SESSION['admin_role'] !== 'admin' && $_SESSION['admin_role'] !== 'editor')) {
     echo "<script>alert('Bạn không có quyền duyệt bài!'); window.history.back();</script>";
+    header("Location: ../../index.php?mod=tintuc&act=list");
     exit();
 }
 

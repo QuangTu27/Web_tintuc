@@ -19,10 +19,10 @@ $sql_ads_footer  = "SELECT * FROM tbl_ads WHERE position='footer_home' AND statu
 $res_ads_footer  = mysqli_query($conn, $sql_ads_footer);
 
 // Lấy Tin tức (Giữ nguyên logic file hiện tại)
-$sql_news = "SELECT * FROM tbl_news ORDER BY ngaydang DESC LIMIT 10";
+$sql_news = "SELECT * FROM tbl_news WHERE trangthai='da_dang' ORDER BY ngaydang DESC LIMIT 10";
 $res_news = mysqli_query($conn, $sql_news);
 
-$sql_top_views = "SELECT * FROM tbl_news ORDER BY view_count DESC LIMIT 5";
+$sql_top_views = "SELECT * FROM tbl_news WHERE trangthai='da_dang' ORDER BY view_count DESC LIMIT 5";
 $res_top_views = mysqli_query($conn, $sql_top_views);
 
 /**
@@ -46,7 +46,7 @@ function renderAdsMedia($ad)
 ?>
 
 <style>
-    
+
 </style>
 
 <?php if (mysqli_num_rows($res_ads_top) > 0): ?>

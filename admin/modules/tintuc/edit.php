@@ -18,8 +18,6 @@ if (mysqli_num_rows($result_get) == 0) {
 $row = mysqli_fetch_assoc($result_get);
 
 // 3. PHÂN QUYỀN TRUY CẬP
-// - Admin/Editor: Được quyền full
-// - Tác giả: Chỉ được sửa bài của mình
 $isAdminOrEditor = ($_SESSION['admin_role'] === 'admin' || $_SESSION['admin_role'] === 'editor');
 $isAuthor = ($row['author_id'] == $_SESSION['admin_id']);
 
@@ -44,9 +42,7 @@ if (isset($_POST['suatintuc'])) {
     $noidung = mysqli_real_escape_string($conn, $_POST['noidung']);
     $danhmuc = (int)$_POST['danhmuc'];
 
-    // LOGIC TRẠNG THÁI:
-    // - Sếp sửa: Lấy theo lựa chọn (Giữ nguyên hoặc đổi)
-    // - Lính sửa: Bắt buộc quay về 'cho_duyet' (Để sếp duyệt lại nội dung mới sửa)
+    // LOGIC TRẠNG THÁI
     if ($isAdminOrEditor) {
         $trangthai = $_POST['trangthai'];
     } else {
@@ -59,14 +55,20 @@ if (isset($_POST['suatintuc'])) {
     $hinhanh_time = $row['hinhanh']; // Mặc định giữ ảnh cũ
 
     if ($hinhanh != '') {
-        // Nếu có up ảnh mới
         $hinhanh_time = time() . '_' . $hinhanh;
-        move_uploaded_file($hinhanh_tmp, '../../images/news/' . $hinhanh_time);
 
-        // Xóa ảnh cũ đi cho đỡ rác host (Kiểm tra file tồn tại trước khi xóa)
-        $old_img_path = '../../images/news/' . $row['hinhanh'];
-        if (file_exists($old_img_path) && !empty($row['hinhanh'])) {
-            unlink($old_img_path);
+        // DÙNG ĐƯỜNG DẪN TUYỆT ĐỐI (An toàn nhất)
+        $target_dir = $_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/images/news/';
+        $target_file = $target_dir . $hinhanh_time;
+
+        if (move_uploaded_file($hinhanh_tmp, $target_file)) {
+            // Xóa ảnh cũ nếu có
+            $old_img_path = $target_dir . $row['hinhanh'];
+            if (!empty($row['hinhanh']) && file_exists($old_img_path)) {
+                unlink($old_img_path);
+            }
+        } else {
+            echo "<script>alert('Lỗi upload ảnh! Kiểm tra lại quyền thư mục.');</script>";
         }
     }
 
@@ -78,11 +80,11 @@ if (isset($_POST['suatintuc'])) {
                    category_id='$danhmuc', 
                    trangthai='$trangthai', 
                    hinhanh='$hinhanh_time',
-                   ngaycapnhat=NOW() 
+                   ngaydang=NOW() 
                    WHERE id='$id'";
 
     if (mysqli_query($conn, $sql_update)) {
-        $msg = ($isAdminOrEditor) ? "Cập nhật thành công!" : "Cập nhật thành công! Bài viết đã được chuyển sang trạng thái Chờ duyệt.";
+        $msg = ($isAdminOrEditor) ? "Cập nhật thành công!" : "Cập nhật thành công! Bài viết đã chuyển sang trạng thái chờ duyệt.";
         echo "<script>alert('$msg'); window.location.href='index.php?mod=tintuc&act=list';</script>";
     } else {
         $error = "Lỗi SQL: " . mysqli_error($conn);
@@ -112,7 +114,6 @@ if (isset($_POST['suatintuc'])) {
                 <?php while ($cat = mysqli_fetch_assoc($query_cate)) {
                     $selected = ($cat['id'] == $row['category_id']) ? 'selected' : '';
 
-                    // Hiển thị tên cha > con
                     $catName = $cat['name'];
                     if ($cat['parent_id'] != 0 && $cat['parent_name'] != null) {
                         $catName = $cat['parent_name'] . ' > ' . $cat['name'];
@@ -126,7 +127,9 @@ if (isset($_POST['suatintuc'])) {
         <div class="form-group">
             <label>Ảnh minh họa</label>
             <div style="margin-bottom: 10px;">
-                <img src="/Web_tintuc/images/news/<?= $row['hinhanh'] ?>" style="height: 150px; border-radius: 5px; border: 1px solid #ddd;" onerror="this.src='../../images/default_news.jpg'">
+                <img src="../images/news/<?= $row['hinhanh'] ?>"
+                    style="height: 150px; border-radius: 5px; border: 1px solid #ddd;"
+                    onerror="this.src='Web_tintuc/images/default_news.png'">
             </div>
             <input type="file" name="hinhanh">
             <small class="form-hint">Chọn ảnh mới nếu muốn thay đổi.</small>
@@ -147,18 +150,18 @@ if (isset($_POST['suatintuc'])) {
             <select name="trangthai" class="form-control" <?= (!$isAdminOrEditor) ? 'disabled' : '' ?> style="<?= (!$isAdminOrEditor) ? 'background:#e9ecef' : '' ?>">
 
                 <?php if ($isAdminOrEditor): ?>
-                    <option value="da_dang" <?= ($row['trangthai'] == 'da_dang') ? 'selected' : '' ?>>✅ Đã đăng (Hiển thị)</option>
+                    <option value="da_dang" <?= ($row['trangthai'] == 'da_dang') ? 'selected' : '' ?>>✅ Đã đăng</option>
                     <option value="cho_duyet" <?= ($row['trangthai'] == 'cho_duyet') ? 'selected' : '' ?>>⏳ Chờ duyệt</option>
-                    <option value="ban_nhap" <?= ($row['trangthai'] == 'ban_nhap') ? 'selected' : '' ?>>📝 Bản nháp (Ẩn)</option>
+                    <option value="ban_nhap" <?= ($row['trangthai'] == 'ban_nhap') ? 'selected' : '' ?>>📝 Bản nháp</option>
                 <?php else: ?>
-                    <option value="cho_duyet" selected>⏳ Gửi chờ duyệt lại (Bạn sửa nội dung, bài sẽ bị ẩn để duyệt lại)</option>
+                    <option value="cho_duyet" selected>⏳ Gửi chờ duyệt lại</option>
                 <?php endif; ?>
 
             </select>
         </div>
 
         <div class="btn-group-center">
-            <button type="submit" name="suatintuc" class="btn btn-OK">💾 Cập nhật bài viết</button>
+            <button type="submit" name="suatintuc" class="btn btn-OK">💾 Cập nhật</button>
             <a href="index.php?mod=tintuc&act=list" class="btn btn-Cancel">❌ Hủy bỏ</a>
         </div>
     </form>
@@ -168,6 +171,7 @@ if (isset($_POST['suatintuc'])) {
 <script>
     CKEDITOR.replace('editor', {
         height: 400,
-        versionCheck: false
+        versionCheck: false,
+        allowedContent: true
     });
 </script>

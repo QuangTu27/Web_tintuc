@@ -16,7 +16,7 @@ $query_list = mysqli_query($conn, $sql_list);
 ?>
 
 <div class="admin-header-inline">
-    <h2 class="admin-title"><i class="fas fa-newspaper"></i> QUẢN LÝ TIN TỨC</h2>
+    <h2 class="admin-title"></i> QUẢN LÝ TIN TỨC</h2>
 </div>
 
 <?php if (isset($_GET['msg'])): ?>
@@ -83,9 +83,9 @@ $query_list = mysqli_query($conn, $sql_list);
 
                         <td><?= $row['id'] ?></td>
                         <td>
-                            <img src="../images/news/<?= $row['hinhanh'] ?>"
+                            <img src="/Web_tintuc/images/news/<?= $row['hinhanh'] ?>"
                                 style="width: 70px; height: 50px; object-fit: cover; border-radius: 4px;"
-                                onerror="this.src='../images/default_news.jpg'">
+                                onerror="this.src='/Web_tintuc/images/news/default_news.png'">
                         </td>
 
                         <td>

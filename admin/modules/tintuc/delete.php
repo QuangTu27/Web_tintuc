@@ -1,22 +1,23 @@
 <?php
-// Kết nối CSDL
+session_start(); // Quan trọng: Khởi động session
+
+// Kết nối CSDL (Dùng đường dẫn tuyệt đối cho an toàn)
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
 // Kiểm tra đăng nhập
 if (!isset($_SESSION['admin_id'])) {
-    header("Location: login.php");
+    header("Location: ../../login.php");
     exit();
 }
 
 /**
- * Hàm xử lý xóa một bài viết cụ thể
- * Trả về: true (thành công), false (lỗi), 'no_permission' (không có quyền)
+ * Hàm xử lý xóa một bài viết
  */
 function deleteNewsItem($conn, $id)
 {
     $id = (int)$id;
 
-    // 1. Lấy thông tin bài viết để kiểm tra quyền và lấy tên ảnh
+    // 1. Lấy thông tin bài viết
     $sql_check = "SELECT * FROM tbl_news WHERE id = $id";
     $res = mysqli_query($conn, $sql_check);
 
@@ -26,9 +27,7 @@ function deleteNewsItem($conn, $id)
 
     $row = mysqli_fetch_assoc($res);
 
-    // 2. KIỂM TRA QUYỀN SỞ HỮU
-    // - Admin/Editor: Quyền sinh sát (Xóa được hết)
-    // - Tác giả: Chỉ xóa được bài của mình
+    // 2. KIỂM TRA QUYỀN (Admin/Editor xóa tất, Tác giả chỉ xóa bài mình)
     $isAdminOrEditor = ($_SESSION['admin_role'] === 'admin' || $_SESSION['admin_role'] === 'editor');
     $isAuthor = ($row['author_id'] == $_SESSION['admin_id']);
 
@@ -36,15 +35,18 @@ function deleteNewsItem($conn, $id)
         return 'no_permission';
     }
 
-    // 3. XÓA ẢNH KHỎI SERVER (Nếu có)
-    // Đường dẫn tương đối từ file này (admin/modules/tintuc) ra thư mục ảnh
-    $img_path = '../../images/news/' . $row['hinhanh'];
+    // 3. XÓA ẢNH TRÊN SERVER (Dùng đường dẫn tuyệt đối)
+    if ($row['hinhanh'] != '') {
+        $img_path = $_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/images/news/' . $row['hinhanh'];
 
-    if ($row['hinhanh'] != '' && file_exists($img_path)) {
-        unlink($img_path);
+        if (file_exists($img_path)) {
+            unlink($img_path);
+        }
     }
 
-    // 4. XÓA DỮ LIỆU TRONG DATABASE
+    // 4. XÓA DỮ LIỆU (Có thể cần xóa bình luận liên quan trước nếu chưa set cascade)
+    mysqli_query($conn, "DELETE FROM tbl_comments WHERE news_id = $id"); // Mở dòng này nếu có bảng comment
+
     $sql_delete = "DELETE FROM tbl_news WHERE id = $id";
     if (mysqli_query($conn, $sql_delete)) {
         return true;
@@ -53,24 +55,24 @@ function deleteNewsItem($conn, $id)
 }
 
 // =================================================================
-// XỬ LÝ KHI NHẬN YÊU CẦU XÓA
+// XỬ LÝ YÊU CẦU
 // =================================================================
 
-// Trường hợp 1: Xóa 1 bài (Bấm nút Xóa ở dòng)
+// 1. Xóa 1 bài (GET)
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $status = deleteNewsItem($conn, $id);
 
     if ($status === 'no_permission') {
-        echo "<script>alert('Bạn không có quyền xóa bài viết của người khác!'); window.location.href='index.php?mod=tintuc&act=list';</script>";
+        echo "<script>alert('Bạn không có quyền xóa bài viết này!'); window.location.href='../../index.php?mod=tintuc&act=list';</script>";
     } elseif ($status === true) {
-        header('Location: index.php?mod=tintuc&act=list&msg=deleted');
+        header('Location: ../../index.php?mod=tintuc&act=list&msg=deleted');
     } else {
-        echo "<script>alert('Lỗi khi xóa bài viết!'); window.location.href='index.php?mod=tintuc&act=list';</script>";
+        echo "<script>alert('Lỗi SQL khi xóa!'); window.location.href='../../index.php?mod=tintuc&act=list';</script>";
     }
 }
 
-// Trường hợp 2: Xóa nhiều bài (Chọn checkbox rồi bấm nút Xóa hết)
+// 2. Xóa nhiều bài (POST Checkbox)
 elseif (isset($_POST['ids']) && is_array($_POST['ids'])) {
     $countSuccess = 0;
     foreach ($_POST['ids'] as $id) {
@@ -79,7 +81,8 @@ elseif (isset($_POST['ids']) && is_array($_POST['ids'])) {
             $countSuccess++;
         }
     }
-    header('Location: index.php?mod=tintuc&act=list&msg=deleted_multi');
+    header('Location: ../../index.php?mod=tintuc&act=list&msg=deleted');
 } else {
-    header('Location: index.php?mod=tintuc&act=list');
+    // Không có dữ liệu thì quay về
+    header('Location: ../../index.php?mod=tintuc&act=list');
 }

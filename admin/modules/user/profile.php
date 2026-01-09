@@ -119,7 +119,7 @@ if (isset($_POST['btn_update'])) {
             <button type="submit" name="btn_update" class="btn btn-OK">
                 💾 Lưu thay đổi
             </button>
-            <a href="index.php?mod=user&act=list" class="btn btn-Cancel">
+            <a href="index.php" class="btn btn-Cancel">
                 ❌ Huỷ
             </a>
         </div>

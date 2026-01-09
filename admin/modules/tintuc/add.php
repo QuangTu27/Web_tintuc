@@ -36,7 +36,24 @@ if (isset($_POST['themtintuc'])) {
 
     if ($hinhanh != '') {
         $hinhanh_time = time() . '_' . $hinhanh; // Đổi tên tránh trùng
-        move_uploaded_file($hinhanh_tmp, '../../images/news/' . $hinhanh_time); // Lưu vào thư mục images/news
+
+        // DÙNG ĐƯỜNG DẪN TUYỆT ĐỐI (An toàn nhất)
+        $target_dir = $_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/images/news/';
+
+        // Kiểm tra nếu thư mục chưa có thì tự tạo
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+
+        $target_file = $target_dir . $hinhanh_time;
+
+        if (move_uploaded_file($hinhanh_tmp, $target_file)) {
+            // Upload thành công
+        } else {
+            // Upload thất bại (Thường do lỗi permission hoặc dung lượng)
+            echo "<script>alert('Lỗi: Không thể lưu ảnh vào thư mục images/news. Hãy kiểm tra quyền ghi.');</script>";
+            // Vẫn cho lưu database nhưng ảnh sẽ lỗi
+        }
     } else {
         $hinhanh_time = '';
     }

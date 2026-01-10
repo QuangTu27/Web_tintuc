@@ -106,7 +106,7 @@ $act = isset($_GET['act']) ? $_GET['act'] : 'general'; // Mặc định là 'gen
                 </li>
 
                 <li class="<?= ($act == 'my_comments') ? 'active' : '' ?>">
-                    <a href="index.php?p=thongtincanhan&act=my_comments">Ý kiến của bạn (0)</a>
+                    <a href="index.php?p=thongtincanhan&act=my_comments">Ý kiến của bạn</a>
                 </li>
 
                 <li class="<?= ($act == 'bookmark_list') ? 'active' : '' ?>">
@@ -144,7 +144,7 @@ $act = isset($_GET['act']) ? $_GET['act'] : 'general'; // Mặc định là 'gen
                 break;
 
             case 'my_comments':
-                echo "<h3>Chức năng bình luận đang phát triển...</h3>";
+                include 'my_comments.php';
                 break;
 
             case 'general':

@@ -13,11 +13,15 @@ if (!isset($_GET['id'])) {
 
 $id = (int)$_GET['id'];
 
-// 2. LẤY THÔNG TIN DANH MỤC HIỆN TẠI
+// 2. LẤY THÔNG TIN DANH MỤC HIỆN TẠI (JOIN THÊM CHA ĐỂ LẤY QUẢN LÝ CỦA CHA)
 $sql = "
-    SELECT c.*, u.hoten AS manager_name 
+    SELECT c.*, 
+           u.hoten AS manager_name,
+           pu.hoten AS parent_manager_name
     FROM tbl_categories c 
     LEFT JOIN tbl_users u ON c.manager_id = u.id 
+    LEFT JOIN tbl_categories p ON c.parent_id = p.id
+    LEFT JOIN tbl_users pu ON p.manager_id = pu.id
     WHERE c.id = $id
 ";
 $result = mysqli_query($conn, $sql);
@@ -40,12 +44,11 @@ if ($_SESSION['admin_role'] === 'editor') {
     }
 }
 
-// 4. LẤY DANH SÁCH DANH MỤC CHA (Để hiển thị vào dropdown)
-// Quan trọng: Phải loại trừ chính nó (AND id != $id) để không chọn chính mình làm cha
+// 4. LẤY DANH SÁCH DANH MỤC CHA
 $sql_parents = "SELECT * FROM tbl_categories WHERE parent_id = 0 AND id != $id ORDER BY id DESC";
 $res_parents = mysqli_query($conn, $sql_parents);
 
-// 5. LẤY DANH SÁCH EDITOR (Chỉ Admin mới cần dùng)
+// 5. LẤY DANH SÁCH EDITOR (Cho Admin)
 $resEditor = null;
 if ($_SESSION['admin_role'] === 'admin') {
     $sqlEditor = "SELECT * FROM tbl_users WHERE role = 'editor'";
@@ -62,17 +65,12 @@ if (isset($_POST['btn_update'])) {
 
     if ($_SESSION['admin_role'] === 'admin') {
         $manager_id = (int)$_POST['manager_id'];
-
-        // --- ĐOẠN SỬA LỖI Ở ĐÂY ---
-        // Chuyển 0 thành NULL
         $manager_sql_value = ($manager_id == 0) ? "NULL" : $manager_id;
 
-        // Cập nhật dùng $manager_sql_value
         $sqlUpdate = "UPDATE tbl_categories 
                       SET name = '$name', parent_id = $parent_id, manager_id = $manager_sql_value 
                       WHERE id = $id";
     } else {
-        // Editor không đổi người quản lý
         $sqlUpdate = "UPDATE tbl_categories 
                       SET name = '$name', parent_id = $parent_id 
                       WHERE id = $id";
@@ -144,11 +142,23 @@ if (isset($_POST['btn_update'])) {
                 </select>
                 <small class="form-hint">* Admin có quyền thay đổi người quản lý.</small>
 
-            <?php } else { ?>
+            <?php } else {
+                // LOGIC HIỂN THỊ CHO EDITOR (Hoặc người xem không phải Admin)
+                $display_name = "Chưa phân công";
+                $note = "";
 
-                <input type="text" value="<?= htmlspecialchars($category['manager_name']) ?>" disabled style="background-color: #e9ecef; cursor: not-allowed;">
-                <input type="hidden" name="manager_id" value="<?= $category['manager_id'] ?>"> <small class="form-hint">* Bạn chỉ được xem, không được thay đổi người phân công.</small>
-
+                if (!empty($category['manager_name'])) {
+                    // 1. Có quản lý trực tiếp
+                    $display_name = $category['manager_name'];
+                } elseif (!empty($category['parent_manager_name'])) {
+                    // 2. Không có trực tiếp, lấy của Cha
+                    $display_name = $category['parent_manager_name'];
+                    $note = " (Theo danh mục cha)";
+                }
+            ?>
+                <input type="text" value="<?= htmlspecialchars($display_name . $note) ?>" disabled style="background-color: #e9ecef; cursor: not-allowed; font-weight: 500; color: #495057;">
+                <input type="hidden" name="manager_id" value="<?= $category['manager_id'] ?>">
+                <small class="form-hint">* Bạn chỉ được xem, không được thay đổi người phân công.</small>
             <?php } ?>
         </div>
 

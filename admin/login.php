@@ -1,6 +1,6 @@
 <?php
 session_start();
-// Gọi file kết nối (Lùi ra 1 cấp thư mục để tìm connect.php)
+// Gọi file kết nối
 include '../connect.php';
 
 // Kiểm tra nếu đã login rồi thì đẩy thẳng vào trang dashboard
@@ -14,9 +14,6 @@ if (isset($_POST['btn_login'])) {
     $u = $_POST['username'];
     $p = $_POST['password'];
 
-    // LƯU Ý QUAN TRỌNG:
-    // 1. Tên bảng phải là 'tbl_users' (như trong hình bạn gửi)
-    // 2. Cột role phải so sánh với chữ 'admin'
     $sql = "SELECT * FROM tbl_users WHERE username = '$u' AND password = '$p' AND role NOT IN ('user')";
     $result = mysqli_query($conn, $sql);
 

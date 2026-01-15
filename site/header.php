@@ -1,9 +1,7 @@
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
-// =================================================================
-// 1. LẤY DỮ LIỆU DANH MỤC & XỬ LÝ ĐA CẤP
-// =================================================================
+// 1. LẤY DỮ LIỆU DANH MỤC
 $sql_cat = "SELECT * FROM tbl_categories ORDER BY id ASC";
 $res_cat = mysqli_query($conn, $sql_cat);
 
@@ -54,7 +52,6 @@ if (isset($_SESSION['user_login'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang tin tức 24H</title>
     <link rel="stylesheet" href="/Web_tintuc/site/css/main.css">
-    <link rel="stylesheet" href="/Web_tintuc/site/css/header.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 

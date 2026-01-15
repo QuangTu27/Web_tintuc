@@ -12,7 +12,7 @@ if (isset($_GET['id'])) {
 
     if (mysqli_query($conn, $sql)) {
         if ($id == $current_admin_id) {
-            session_destroy(); // Hủy phiên đăng nhập
+            session_destroy();
             echo "<script>
                 alert('Bạn đã xóa tài khoản của chính mình. Vui lòng đăng nhập lại!');
                 window.location.href = 'login.php';

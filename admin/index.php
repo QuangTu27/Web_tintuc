@@ -6,9 +6,6 @@ include '../connect.php';
 if (isset($_GET['act']) && $_GET['act'] == 'logout') {
     // Xóa toàn bộ session
     session_destroy();
-    // Hoặc xóa từng cái nếu muốn giữ lại setting khác:
-    // unset($_SESSION['admin_login']);
-
     // Chuyển hướng về trang đăng nhập
     header('location: login.php');
     exit();
@@ -21,7 +18,7 @@ if (!isset($_SESSION['admin_login'])) {
     exit();
 }
 
-// 3. Gọi giao diện phần Đầu (Menu, Logo...)
+// 3. Gọi giao diện phần header
 include 'header_admin.php';
 ?>
 
@@ -37,7 +34,7 @@ if ($mod == 'dashboard') {
     // Đếm tổng bài viết
     $count_news = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM tbl_news"))['total'];
 
-    // Đếm bài viết chờ duyệt (Quan trọng với Editor)
+    // Đếm bài viết chờ duyệt
     $count_pending = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM tbl_news WHERE trangthai='cho_duyet'"))['total'];
 
     // Đếm tổng danh mục
@@ -137,7 +134,7 @@ if ($mod == 'dashboard') {
                     </tbody>
                 </table>
             <?php else: ?>
-                <p style="text-align: center; color: #999; margin-top: 20px;">Tuyệt vời! Không có bài viết nào đang chờ duyệt.</p>
+                <p style="text-align: center; color: #999; margin-top: 20px;">Không có bài viết nào đang chờ duyệt.</p>
             <?php endif; ?>
         </div>
     </div>
@@ -145,7 +142,6 @@ if ($mod == 'dashboard') {
 }
 // --- TRƯỜNG HỢP 2: GỌI CÁC MODULE CON ---
 else {
-    // Tạo đường dẫn đến file cần gọi
     // Ví dụ: modules/tintuc/list.php
     $path = "modules/{$mod}/{$act}.php";
 
@@ -166,12 +162,8 @@ else {
     if (file_exists($path)) {
         include $path;
     } else {
-        // Nếu không tìm thấy file, báo lỗi đẹp
-        echo "<div style='color: red; padding: 20px; background: #fff3cd; border: 1px solid #ffeeba;'>";
-        echo "<h3>❌ Lỗi 404: Không tìm thấy chức năng này!</h3>";
-        echo "<p>File không tồn tại: <b>{$path}</b></p>";
-        echo "<p>Vui lòng kiểm tra lại tên thư mục hoặc tên file.</p>";
-        echo "</div>";
+        // Nếu không tìm thấy file, báo lỗi 
+        echo "<h3>Lỗi 404: Không tìm thấy chức năng này!</h3>";
     }
 }
 ?>

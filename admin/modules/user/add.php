@@ -26,14 +26,9 @@ if (isset($_POST['btn_add'])) {
 ?>
 
 <div class="admin-container">
-    <div class="admin-header-inline">
-        <h2 class="admin-title" style="margin: 0; flex-grow: 1; text-align: center;">THÊM NGƯỜI DÙNG</h2>
-        <div style="width: 140px;"></div>
-    </div>
-
-    <?php if (isset($error)): ?>
-        <p class="form-error" style="color: #dc3545; background: #f8d7da; padding: 10px; border-radius: 4px;"><?= $error ?></p>
-    <?php endif; ?>
+    <h2 class="admin-title">
+        Thêm người dùng
+    </h2>
 
     <form method="post" class="admin-form">
         <div class="form-group">
@@ -68,9 +63,13 @@ if (isset($_POST['btn_add'])) {
             </select>
         </div>
 
-        <div class="btn-group-center" style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
-            <button type="submit" name="btn_add" class="btn btn-OK">💾 Lưu người dùng</button>
-            <a href="index.php?mod=user&act=list" class="btn btn-Cancel">❌ Huỷ</a>
+        <div class="btn-group-center">
+            <button type="submit" name="btn_add" class="btn btn-OK">
+                💾 Lưu người dùng
+            </button>
+            <a href="index.php?mod=user&act=list" class="btn btn-Cancel">
+                ❌ Huỷ
+            </a>
         </div>
     </form>
 </div>

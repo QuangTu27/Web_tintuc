@@ -7,18 +7,12 @@ include 'connect.php';
 
 //xử lý đăng xuất
 if (isset($_GET['act']) && $_GET['act'] == 'logout') {
-    // Xóa tất cả các biến session
     session_unset();
-
-    // Hủy phiên làm việc hoàn toàn
     session_destroy();
-
-    // Thông báo và chuyển hướng về trang chủ
     header('Location: /Web_tintuc/index.php');
     exit();
 }
 
-// 1. Gọi Header
 include 'site/header.php';
 
 //mapping url
@@ -41,8 +35,7 @@ $routes = [
     'bookmark_list'  => 'site/pages/bookmark/bookmark_list.php',
 ];
 
-// 2. Điều hướng nội dung (Router đơn giản)
-// Mặc định vào trang home
+// 2. Điều hướng 
 $page = $_GET['p'] ?? 'home';
 
 if (isset($routes[$page]) && file_exists($routes[$page])) {
@@ -51,5 +44,4 @@ if (isset($routes[$page]) && file_exists($routes[$page])) {
     include 'site/pages/404.php';
 }
 
-// 3. Gọi Footer
 include 'site/footer.php';

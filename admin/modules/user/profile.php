@@ -1,24 +1,18 @@
 <?php
-// Bắt buộc đăng nhập 
 if (!isset($_SESSION['admin_login'])) {
     header("Location: login.php");
     exit;
 }
-
 $user_id = $_SESSION['admin_id'];
 
-// Lấy thông tin user
 $sql = "SELECT * FROM tbl_users WHERE id = $user_id";
 $result = mysqli_query($conn, $sql);
 $user = mysqli_fetch_assoc($result);
 
-//UPDATE PROFILE
 if (isset($_POST['btn_update'])) {
-
     $hoten  = trim($_POST['hoten']);
     $email  = trim($_POST['email']);
     $pass   = trim($_POST['password']);
-
     // Cập nhật avatar
     if (!empty($_FILES['avatar']['name'])) {
         $avatar = time() . '_' . $_FILES['avatar']['name'];
@@ -46,29 +40,34 @@ if (isset($_POST['btn_update'])) {
         ");
     }
 
-    // Sau khi các câu lệnh mysqli_query chạy xong:
-    $_SESSION['success_msg'] = "Cập nhật thông tin cá nhân thành công!"; // Lưu thông báo
-
-    header("Location: index.php?mod=user&act=profile");
+    header("Location: index.php?mod=user&act=profile&msg=updated_profile");
     exit;
 }
 ?>
 
-
 <div class="admin-container">
-    <?php if (isset($_SESSION['success_msg'])): ?>
-        <div id="flash-msg" class="alert-success">
+    <?php if (isset($_GET['msg'])): ?>
+        <div id="status-msg"
+            class="alert <?php echo ($_GET['msg'] == 'updated_profile') ? 'alert-success' : 'alert-warning'; ?>">
             <?php
-            echo $_SESSION['success_msg'];
-            unset($_SESSION['success_msg']); // Hiện xong thì xóa để không lặp lại
+            switch ($_GET['msg']) {
+                case 'updated_profile':
+                    echo "✅ Cập nhật thông tin cá nhân thành công!";
+                    break;
+            }
             ?>
         </div>
+
+        <script>
+            setTimeout(function() {
+                var msg = document.getElementById('status-msg');
+                if (msg) msg.style.display = 'none';
+            }, 3000);
+        </script>
     <?php endif; ?>
 
     <h2 class="admin-title">Thông tin cá nhân</h2>
     <form method="post" enctype="multipart/form-data" class="admin-form">
-
-        <!-- AVATAR -->
         <div class="form-group text-center">
             <img
                 src="/Web_tintuc/images/avatars/<?php echo $user['avatar']; ?>"
@@ -76,40 +75,34 @@ if (isset($_POST['btn_update'])) {
             <input type="file" name="avatar" accept="image/*">
         </div>
 
-        <!-- USERNAME -->
         <div class="form-group">
             <label>Username</label>
             <input type="text" value="<?php echo $user['username']; ?>" disabled>
         </div>
 
-        <!-- HỌ TÊN -->
         <div class="form-group">
             <label>Họ tên</label>
             <input type="text" name="hoten"
                 value="<?php echo $user['hoten']; ?>" required>
         </div>
 
-        <!-- EMAIL -->
         <div class="form-group">
             <label>Email</label>
             <input type="email" name="email"
                 value="<?php echo $user['email']; ?>" required>
         </div>
 
-        <!-- PASSWORD -->
         <div class="form-group">
             <label>Mật khẩu mới</label>
             <input type="password" name="password"
                 placeholder="Để trống nếu không đổi">
         </div>
 
-        <!-- ROLE -->
         <div class="form-group">
             <label>Quyền</label>
             <input type="text" value="<?php echo $user['role']; ?>" disabled>
         </div>
 
-        <!-- CREATED -->
         <div class="form-group">
             <label>Ngày tham gia</label>
             <input type="text" value="<?php echo $user['created_at']; ?>" disabled>
@@ -123,6 +116,5 @@ if (isset($_POST['btn_update'])) {
                 ❌ Huỷ
             </a>
         </div>
-
     </form>
 </div>

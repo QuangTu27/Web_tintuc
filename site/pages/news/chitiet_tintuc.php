@@ -1,4 +1,5 @@
 <?php
+
 /**
  * FILE: site/pages/news/chitiet_tintuc.php
  * Đã tích hợp hệ thống Like & Comment AJAX
@@ -86,21 +87,21 @@ if ($id > 0 && isset($_SESSION['user_id'])) {
                     $is_liked = (mysqli_num_rows($check_l) > 0);
                 }
                 ?>
-                <button id="btn-like" data-id="<?= $id ?>" 
-                        style="cursor:pointer; border:1px solid #0a9e54; padding: 6px 15px; border-radius: 4px; background: <?= $is_liked ? '#0a9e54' : '#fff' ?>; color: <?= $is_liked ? '#fff' : '#0a9e54' ?>; font-size: 13px; font-weight: bold;">
+                <button id="btn-like" data-id="<?= $id ?>"
+                    style="cursor:pointer; border:1px solid #0a9e54; padding: 6px 15px; border-radius: 4px; background: <?= $is_liked ? '#0a9e54' : '#fff' ?>; color: <?= $is_liked ? '#fff' : '#0a9e54' ?>; font-size: 13px; font-weight: bold;">
                     <i class="<?= $is_liked ? 'fas' : 'far' ?> fa-thumbs-up"></i> Thích (<span id="like-count"><?= $total_likes ?></span>)
                 </button>
 
-                <?php if ($uid > 0): 
+                <?php if ($uid > 0):
                     $check_save = mysqli_query($conn, "SELECT id FROM tbl_bookmarks WHERE user_id=$uid AND news_id=$id");
                     $is_saved = (mysqli_num_rows($check_save) > 0);
                 ?>
-                    <a href="index.php?p=bookmark_add&news_id=<?= $id ?>" 
-                       style="background: <?= $is_saved ? '#e9ecef' : '#ffc107' ?>; border: 1px solid #ddd; padding: 6px 15px; border-radius: 4px; text-decoration: none; color: #000; font-size: 13px; font-weight: bold;">
+                    <a href="index.php?p=bookmark_add&news_id=<?= $id ?>"
+                        style="background: <?= $is_saved ? '#e9ecef' : '#ffc107' ?>; border: 1px solid #ddd; padding: 6px 15px; border-radius: 4px; text-decoration: none; color: #000; font-size: 13px; font-weight: bold;">
                         <i class="<?= $is_saved ? 'fas fa-check' : 'far fa-bookmark' ?>"></i> <?= $is_saved ? 'Đã lưu' : 'Lưu tin' ?>
                     </a>
                 <?php else: ?>
-                    <a href="index.php?p=dangnhap" onclick="alert('Bạn cần đăng nhập để lưu tin!')" style="background: #f8f9fa; border: 1px solid #ddd; padding: 6px 15px; border-radius: 4px; text-decoration: none; color: #666; font-size: 13px;">
+                    <a onclick="alert('Bạn cần đăng nhập để lưu tin!')" style="background: #f8f9fa; border: 1px solid #ddd; padding: 6px 15px; border-radius: 4px; text-decoration: none; color: #666; font-size: 13px;" href="javascript:void(0)">
                         <i class="far fa-bookmark"></i> Lưu tin
                     </a>
                 <?php endif; ?>
@@ -123,13 +124,13 @@ if ($id > 0 && isset($_SESSION['user_id'])) {
 
         <div class="comment-section" style="margin-top: 50px; border-top: 2px solid #333; padding-top: 30px;">
             <h3 style="margin-bottom: 20px;"><i class="far fa-comments"></i> Bình luận</h3>
-            
+
             <?php if (isset($_SESSION['user_id'])): ?>
                 <div style="margin-bottom: 30px;">
-                    <textarea id="comment-content" placeholder="Chia sẻ ý kiến của bạn..." 
-                              style="width: 100%; height: 80px; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;"></textarea>
-                    <button id="btn-submit-comment" data-id="<?= $id ?>" 
-                            style="margin-top: 10px; background: #0a9e54; color: #fff; border: none; padding: 10px 25px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                    <textarea id="comment-content" placeholder="Chia sẻ ý kiến của bạn..."
+                        style="width: 100%; height: 80px; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;"></textarea>
+                    <button id="btn-submit-comment" data-id="<?= $id ?>"
+                        style="margin-top: 10px; background: #0a9e54; color: #fff; border: none; padding: 10px 25px; border-radius: 4px; cursor: pointer; font-weight: bold;">
                         Gửi bình luận
                     </button>
                 </div>
@@ -151,14 +152,14 @@ if ($id > 0 && isset($_SESSION['user_id'])) {
                 <?php endwhile; ?>
             </div>
         </div>
-<button id="btn-share" 
-        style="cursor:pointer; border:1px solid #007bff; padding: 6px 15px; border-radius: 4px; background: #fff; color: #007bff; font-size: 13px; font-weight: bold; display: flex; align-items: center; gap: 5px;">
-    <i class="fas fa-share-alt"></i> Chia sẻ
-</button>
+        <button id="btn-share"
+            style="cursor:pointer; border:1px solid #007bff; padding: 6px 15px; border-radius: 4px; background: #fff; color: #007bff; font-size: 13px; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+            <i class="fas fa-share-alt"></i> Chia sẻ
+        </button>
 
-<span id="share-success" style="display: none; color: #28a745; font-size: 12px; font-weight: bold; margin-left: 10px;">
-    <i class="fas fa-check"></i> Đã sao chép link!
-</span>
+        <span id="share-success" style="display: none; color: #28a745; font-size: 12px; font-weight: bold; margin-left: 10px;">
+            <i class="fas fa-check"></i> Đã sao chép link!
+        </span>
         <div style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee;">
             <p style="font-weight: bold; color: #000;">Nguồn: TINTUC24H</p>
             <a href="javascript:history.back()" style="color: #007bff; text-decoration: none;">← Quay lại trang trước</a>
@@ -168,62 +169,88 @@ if ($id > 0 && isset($_SESSION['user_id'])) {
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
+    $(document).ready(function() {
 
-   $(document).on('click', '#btn-like', function(e) {
-    e.preventDefault(); 
-    const newsId = $(this).data('id');
-    const btn = $(this);
-    console.log("Đã bấm Like bài viết:", newsId);
+        $(document).on('click', '#btn-like', function(e) {
+            e.preventDefault();
+            const newsId = $(this).data('id');
+            const btn = $(this);
+            console.log("Đã bấm Like bài viết:", newsId);
 
-    $.post('site/pages/news/like.php', {news_id: newsId}, function(data) {
-        console.log("Server trả về:", data);
-        try {
-            const res = JSON.parse(data);
-            if(res.status === 'success') {
-                $('#like-count').text(res.new_count);
-                if(res.action === 'liked') {
-                    btn.css({'background': '#0a9e54', 'color': '#fff'});
-                    btn.find('i').attr('class', 'fas fa-thumbs-up');
-                } else {
-                    btn.css({'background': '#fff', 'color': '#0a9e54'});
-                    btn.find('i').attr('class', 'far fa-thumbs-up');
+            $.post('site/pages/news/like.php', {
+                news_id: newsId
+            }, function(data) {
+                console.log("Server trả về:", data);
+                try {
+                    const res = JSON.parse(data);
+                    if (res.status === 'success') {
+                        $('#like-count').text(res.new_count);
+                        if (res.action === 'liked') {
+                            btn.css({
+                                'background': '#0a9e54',
+                                'color': '#fff'
+                            });
+                            btn.find('i').attr('class', 'fas fa-thumbs-up');
+                        } else {
+                            btn.css({
+                                'background': '#fff',
+                                'color': '#0a9e54'
+                            });
+                            btn.find('i').attr('class', 'far fa-thumbs-up');
+                        }
+                    } else {
+                        alert(res.message);
+                    }
+                } catch (e) {
+                    console.error("Lỗi phân tích JSON:", e);
+                    alert("Có lỗi xảy ra, kiểm tra Console!");
                 }
-            } else { alert(res.message); }
-        } catch(e) { 
-            console.error("Lỗi phân tích JSON:", e);
-            alert("Có lỗi xảy ra, kiểm tra Console!"); 
-        }
-    });
-});
-    $('#btn-submit-comment').click(function() {
-        const content = $('#comment-content').val();
-        const newsId = $(this).data('id');
-        if(content.trim() === '') { alert('Vui lòng nhập nội dung!'); return; }
+            });
+        });
+        $('#btn-submit-comment').click(function() {
+            const content = $('#comment-content').val();
+            const newsId = $(this).data('id');
+            if (content.trim() === '') {
+                alert('Vui lòng nhập nội dung!');
+                return;
+            }
 
-        $.post('site/pages/news/comment.php', {news_id: newsId, noidung: content}, function(data) {
-            try {
-                const res = JSON.parse(data);
-                if(res.status === 'success') {
-                    $('#comment-list').prepend(res.html);
-                    $('#comment-content').val('');
-                } else { alert(res.message); }
-            } catch(e) { console.error("Lỗi phản hồi:", data); }
+            $.post('site/pages/news/comment.php', {
+                news_id: newsId,
+                noidung: content
+            }, function(data) {
+                try {
+                    const res = JSON.parse(data);
+                    if (res.status === 'success') {
+                        $('#comment-list').prepend(res.html);
+                        $('#comment-content').val('');
+                    } else {
+                        alert(res.message);
+                    }
+                } catch (e) {
+                    console.error("Lỗi phản hồi:", data);
+                }
+            });
         });
     });
-});
 
-$('#btn-share').click(function() {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url).then(function() {
-        $('#share-success').fadeIn();
-        $('#btn-share').css({'background': '#007bff', 'color': '#fff'});
-        setTimeout(function() {
-            $('#share-success').fadeOut();
-            $('#btn-share').css({'background': '#fff', 'color': '#007bff'});
-        }, 2000);
-    }).catch(function(err) {
-        alert('Lỗi: Không thể copy tự động!');
+    $('#btn-share').click(function() {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url).then(function() {
+            $('#share-success').fadeIn();
+            $('#btn-share').css({
+                'background': '#007bff',
+                'color': '#fff'
+            });
+            setTimeout(function() {
+                $('#share-success').fadeOut();
+                $('#btn-share').css({
+                    'background': '#fff',
+                    'color': '#007bff'
+                });
+            }, 2000);
+        }).catch(function(err) {
+            alert('Lỗi: Không thể copy tự động!');
+        });
     });
-});
 </script>

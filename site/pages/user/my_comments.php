@@ -1,5 +1,4 @@
 <?php
-// BẮT BUỘC ĐĂNG NHẬP
 if (!isset($_SESSION['user_id'])) {
     echo "<div class='alert-box'>⚠️ Vui lòng đăng nhập để xem lịch sử bình luận.</div>";
     return;
@@ -7,10 +6,8 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// --- XỬ LÝ XÓA BÌNH LUẬN ---
 if (isset($_GET['del_cmt'])) {
     $del_id = intval($_GET['del_cmt']);
-    // Chỉ xóa nếu bình luận đó thuộc về user đang đăng nhập
     $sql_check = "SELECT id FROM tbl_comments WHERE id = $del_id AND user_id = $user_id";
     if (mysqli_num_rows(mysqli_query($conn, $sql_check)) > 0) {
         mysqli_query($conn, "DELETE FROM tbl_comments WHERE id = $del_id");
@@ -20,8 +17,6 @@ if (isset($_GET['del_cmt'])) {
     }
 }
 
-// --- LẤY DANH SÁCH BÌNH LUẬN ---
-// JOIN bảng comments với news để lấy thông tin bài viết
 $sql = "SELECT c.*, n.tieude, n.hinhanh, n.id as news_id
         FROM tbl_comments c
         JOIN tbl_news n ON c.news_id = n.id
@@ -184,12 +179,6 @@ $query = mysqli_query($conn, $sql);
                         <div class="row-meta">
                             <div>
                                 <span>📅 <?= date('d/m/Y H:i', strtotime($row['ngaybinh'])) ?></span>
-                                <span style="margin: 0 5px;">|</span>
-                                <?php if ($row['status'] == 1): ?>
-                                    <span class="status-badge status-active">✅ Đã duyệt</span>
-                                <?php else: ?>
-                                    <span class="status-badge status-hidden">⏳ Chờ duyệt</span>
-                                <?php endif; ?>
                             </div>
 
                             <a href="index.php?p=thongtincanhan&act=my_comments&del_cmt=<?= $row['id'] ?>"

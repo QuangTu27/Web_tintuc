@@ -1,9 +1,6 @@
 <?php
-// Kết nối CSDL
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
-// 1. KIỂM TRA QUYỀN DUYỆT BÀI
-// Chỉ Admin và Editor mới được quyền cho bài hiện ngay lập tức
 $canPublish = ($_SESSION['admin_role'] === 'admin' || $_SESSION['admin_role'] === 'editor');
 
 // 2. LẤY DANH SÁCH DANH MỤC (Kèm tên cha để hiển thị rõ ràng)

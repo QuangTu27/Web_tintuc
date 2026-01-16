@@ -1,19 +1,13 @@
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
-/* =========================
-   1. LẤY ID USER
-========================= */
 if (!isset($_GET['id'])) {
     header("Location: /Web_tintuc/admin/index.php?mod=user&act=list");
     exit;
 }
 
-$id = (int)$_GET['id'];
+$id = $_GET['id'];
 
-/* =========================
-   2. LẤY THÔNG TIN USER
-========================= */
 $sql = "SELECT * FROM tbl_users WHERE id = $id";
 $result = mysqli_query($conn, $sql);
 
@@ -21,12 +15,8 @@ if (mysqli_num_rows($result) == 0) {
     header("Location: index.php?mod=user&act=list");
     exit;
 }
-
 $user = mysqli_fetch_assoc($result);
 
-/* =========================
-   3. XỬ LÝ SUBMIT UPDATE
-========================= */
 if (isset($_POST['btn_update'])) {
     $hoten = trim($_POST['hoten']);
     $email = trim($_POST['email']);

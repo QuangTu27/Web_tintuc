@@ -2,10 +2,6 @@
 // Kết nối CSDL
 include_once($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
-/* =================================================
-   1. TRUY VẤN DỮ LIỆU (Dùng logic chuẩn của file ADS cũ)
-   ================================================= */
-// Lấy Quảng cáo theo vị trí (Sửa lỗi 'vitri' thành 'position')
 $sql_ads_top     = "SELECT * FROM tbl_ads WHERE position='top_home' AND status='hien'";
 $res_ads_top     = mysqli_query($conn, $sql_ads_top);
 

@@ -1,46 +1,30 @@
 <?php
 session_start();
-// 1. Gọi file kết nối CSDL (ra ngoài 1 cấp thư mục)
 include '../connect.php';
 
 if (isset($_GET['act']) && $_GET['act'] == 'logout') {
-    // Xóa toàn bộ session
     session_destroy();
-    // Chuyển hướng về trang đăng nhập
     header('location: login.php');
     exit();
 }
 
-// 2. KIỂM TRA BẢO MẬT (Chặn không cho vào nếu chưa đăng nhập)
-// Nếu chưa có session 'admin_login', đá về trang login ngay
 if (!isset($_SESSION['admin_login'])) {
     header('location: login.php');
     exit();
 }
 
-// 3. Gọi giao diện phần header
 include 'header_admin.php';
 ?>
 
 <?php
-// Lấy thông tin từ URL (Ví dụ: index.php?mod=tintuc&act=add)
-// Nếu không có 'mod' thì mặc định là 'dashboard' (Trang chủ)
 $mod = isset($_GET['mod']) ? $_GET['mod'] : 'dashboard';
 $act = isset($_GET['act']) ? $_GET['act'] : 'list';
 
 // --- TRƯỜNG HỢP 1: TRANG CHỦ DASHBOARD ---
 if ($mod == 'dashboard') {
-    // 1. LẤY SỐ LIỆU THỐNG KÊ
-    // Đếm tổng bài viết
     $count_news = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM tbl_news"))['total'];
-
-    // Đếm bài viết chờ duyệt
     $count_pending = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM tbl_news WHERE trangthai='cho_duyet'"))['total'];
-
-    // Đếm tổng danh mục
     $count_cats = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM tbl_categories"))['total'];
-
-    // Đếm tổng thành viên (Chỉ Admin thấy)
     $count_users = 0;
     if ($_SESSION['admin_role'] == 'admin') {
         $count_users = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM tbl_users"))['total'];
@@ -51,7 +35,8 @@ if ($mod == 'dashboard') {
     $res_pending = mysqli_query($conn, $sql_pending_list);
 ?>
     <div class="dashboard-container">
-        <div class="welcome-banner" style="background: linear-gradient(135deg, #0a9e54 0%, #28a745 100%); padding: 30px; border-radius: 12px; color: white; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);">
+        <div class="welcome-banner"
+            style="background: linear-gradient(135deg, #0a9e54 0%, #28a745 100%); padding: 30px; border-radius: 12px; color: white; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);">
             <h2 style="margin: 0 0 10px 0; font-size: 24px;">👋 Xin chào, <?php echo $_SESSION['admin_name']; ?>!</h2>
             <p style="margin: 0; opacity: 0.9;">Chúc bạn một ngày làm việc hiệu quả. Dưới đây là tổng quan hệ thống hôm nay.</p>
         </div>
@@ -127,7 +112,9 @@ if ($mod == 'dashboard') {
                                     <?= date('d/m/Y H:i', strtotime($row['ngaydang'])) ?>
                                 </td>
                                 <td style="padding: 12px 10px; border-bottom: 1px solid #eee;">
-                                    <a href="index.php?mod=tintuc&act=edit&id=<?= $row['id'] ?>" style="padding: 5px 10px; background: #007bff; color: white; border-radius: 4px; text-decoration: none; font-size: 12px;">Xem & Duyệt</a>
+                                    <a href="index.php?mod=tintuc&act=edit&id=<?= $row['id'] ?>"
+                                        style="padding: 5px 10px; background: #007bff; color: white; border-radius: 4px; text-decoration: none; font-size: 12px;">
+                                        Xem & Duyệt</a>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
@@ -142,7 +129,6 @@ if ($mod == 'dashboard') {
 }
 // --- TRƯỜNG HỢP 2: GỌI CÁC MODULE CON ---
 else {
-    // Ví dụ: modules/tintuc/list.php
     $path = "modules/{$mod}/{$act}.php";
 
     $role = $_SESSION['admin_role'];
@@ -158,17 +144,14 @@ else {
         die('Bạn không có quyền truy cập');
     }
 
-    // Kiểm tra file có tồn tại không rồi mới include
     if (file_exists($path)) {
         include $path;
     } else {
-        // Nếu không tìm thấy file, báo lỗi 
         echo "<h3>Lỗi 404: Không tìm thấy chức năng này!</h3>";
     }
 }
 ?>
 
 <?php
-// 4. Gọi giao diện phần Chân (Đóng thẻ div)
 include 'footer_admin.php';
 ?>

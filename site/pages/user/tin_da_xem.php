@@ -95,7 +95,7 @@ if (!empty($viewed_ids)) {
     }
 </style>
 
-<div style="margin-top: 10px; margin-bottom: 50px;">
+<div>
     <h3 style="border-left: 4px solid #00b686; padding-left: 10px; margin-bottom: 20px; color: #333;">
         LỊCH SỬ XEM TIN
     </h3>

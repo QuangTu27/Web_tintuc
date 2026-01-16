@@ -1,5 +1,4 @@
 <?php
-// KIỂM TRA ĐĂNG NHẬP
 if (!isset($_SESSION['user_login'])) {
     echo "<script>window.location.href='index.php';</script>";
     exit;

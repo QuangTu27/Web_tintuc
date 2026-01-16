@@ -1,13 +1,12 @@
 <?php
-// Kết nối CSDL
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
 // Xử lý khi submit form
 if (isset($_POST['btn_add'])) {
-    $username = mysqli_real_escape_string($conn, $_POST['username']);
+    $username = $_POST['username'];
     $password = $_POST['password'];
-    $hoten    = mysqli_real_escape_string($conn, $_POST['hoten']);
-    $email    = mysqli_real_escape_string($conn, $_POST['email']);
+    $hoten    = $_POST['hoten'];
+    $email    = $_POST['email'];
     $role     = $_POST['role'];
 
     $check = "SELECT * FROM tbl_users WHERE username='$username'";

@@ -16,7 +16,6 @@ if (isset($_GET['id'])) {
 
     $sql = "DELETE FROM tbl_ads WHERE id=$id";
     if (mysqli_query($conn, $sql)) {
-        // Chuyển hướng kèm theo tham số thông báo trên URL
         header('Location: index.php?mod=ads&act=list&msg=deleted');
         exit();
     } else {

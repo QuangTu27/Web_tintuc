@@ -1,9 +1,6 @@
 <?php
 if (!isset($_SESSION['user_id'])) {
-    echo "<div class='container' style='padding:50px 0; text-align:center;'>
-            <h3>⚠️ Bạn cần đăng nhập để xem tin đã lưu</h3>
-            <a href='javascript:void(0)' onclick='openAuthModal(\"login\")' style='color:#007bff; font-weight:bold;'>Đăng nhập ngay</a>
-          </div>";
+    echo "<div class='alert-box'>⚠️ Vui lòng đăng nhập để xem tin đã lưu.</div>";
     return;
 }
 

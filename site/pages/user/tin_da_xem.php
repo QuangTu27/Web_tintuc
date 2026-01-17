@@ -1,29 +1,23 @@
 <?php
-// 1. KIỂM TRA ĐĂNG NHẬP (Giao diện giống bookmark)
 if (!isset($_SESSION['user_id'])) {
-    echo "<div class='container' style='padding:50px 0; text-align:center;'>
-            <h3>⚠️ Bạn cần đăng nhập để xem lịch sử xem tin</h3>
-            <a href='javascript:void(0)' onclick='openAuthModal(\"login\")' style='color:#007bff; font-weight:bold; cursor:pointer;'>Đăng nhập ngay</a>
-          </div>";
+    echo "<div class='alert-box'>⚠️ Vui lòng đăng nhập để xem tin đã xem.</div>";
     return;
 }
 
 $uid = $_SESSION['user_id'];
 $cookie_name = 'viewed_news_' . $uid;
 
-// 2. XỬ LÝ DỮ LIỆU
 $viewed_ids = isset($_COOKIE[$cookie_name]) ? json_decode($_COOKIE[$cookie_name], true) : [];
 $data_news = [];
 
 if (!empty($viewed_ids)) {
     $list_id = implode(',', array_map('intval', $viewed_ids));
 
-    // Query lấy tin tức
     $sql = "SELECT n.*, c.name AS cat_name 
             FROM tbl_news n
             LEFT JOIN tbl_categories c ON n.category_id = c.id
             WHERE n.id IN ($list_id) 
-            ORDER BY FIELD(n.id, $list_id) DESC"; // DESC để tin mới xem lên đầu
+            ORDER BY FIELD(n.id, $list_id) DESC";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {

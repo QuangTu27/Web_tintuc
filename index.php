@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 session_start();
 ob_start();
 include 'connect.php';
@@ -10,7 +8,7 @@ if (isset($_GET['act']) && $_GET['act'] == 'logout') {
     session_unset();
     session_destroy();
     header('Location: /Web_tintuc/index.php');
-    exit();
+    exit;
 }
 
 include 'site/header.php';
@@ -27,12 +25,11 @@ $routes = [
 
     'thongtincanhan' => 'site/pages/user/thongtincanhan.php',
     'my_comments'    => 'site/pages/user/my_comments.php',
-    'tin_da_luu'     => 'site/pages/user/tin_da_luu.php',
+    'tin_da_luu'     => 'site/pages/user/bookmark_list.php',
     'tin_da_xem'     => 'site/pages/user/tin_da_xem.php',
 
     'bookmark_add'   => 'site/pages/bookmark/bookmark_add.php',
     'bookmark_delete' => 'site/pages/bookmark/bookmark_delete.php',
-    'bookmark_list'  => 'site/pages/bookmark/bookmark_list.php',
 ];
 
 // 2. Điều hướng 

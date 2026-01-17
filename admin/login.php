@@ -4,7 +4,7 @@ include '../connect.php';
 
 if (isset($_SESSION['admin_login'])) {
     header('location: index.php');
-    exit();
+    exit;
 }
 
 if (isset($_POST['btn_login'])) {
@@ -23,7 +23,7 @@ if (isset($_POST['btn_login'])) {
         $_SESSION['admin_avatar'] = $row['avatar'];
 
         header('location: index.php');
-        exit();
+        exit;
     } else {
         $error = "Sai tài khoản, mật khẩu hoặc bạn không phải Admin!";
     }

@@ -29,7 +29,7 @@ if (isset($_POST['btn_login'])) {
             </script>";
         } else {
             header('Location: /Web_tintuc/index.php');
-            exit();
+            exit;
         }
     } else {
         echo "<script>

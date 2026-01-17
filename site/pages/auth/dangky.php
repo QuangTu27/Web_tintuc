@@ -15,7 +15,7 @@ if (isset($_POST['btn_register'])) {
     $res_check = mysqli_query($conn, $sql_check);
     if (mysqli_num_rows($res_check) > 0) {
         echo "<script>alert('Tên đăng nhập (hoặc Email) đã tồn tại!'); window.history.back();</script>";
-        exit();
+        exit;
     }
 
     //insert

@@ -7,13 +7,14 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 if (isset($_GET['del_cmt'])) {
-    $del_id = intval($_GET['del_cmt']);
+    $del_id = $_GET['del_cmt'];
     $sql_check = "SELECT id FROM tbl_comments WHERE id = $del_id AND user_id = $user_id";
     if (mysqli_num_rows(mysqli_query($conn, $sql_check)) > 0) {
         mysqli_query($conn, "DELETE FROM tbl_comments WHERE id = $del_id");
-        echo "<script>alert('Đã xóa bình luận thành công!'); window.location.href='index.php?p=thongtincanhan&act=my_comments';</script>";
+        echo "<script>alert('Đã xóa bình luận thành công!'); 
+        window.location.href='index.php?p=thongtincanhan&act=my_comments';</script>";
     } else {
-        echo "<script>alert('Lỗi: Bạn không có quyền xóa bình luận này!');</script>";
+        echo "<script>alert('Lỗi');</script>";
     }
 }
 

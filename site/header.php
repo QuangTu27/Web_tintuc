@@ -21,7 +21,6 @@ function getSubCategories($items, $parentId)
     return $subs;
 }
 
-// Xử lý thông tin User
 $avatar = 'default_avatar.png';
 $displayName = 'Người dùng';
 $username = 'Guest';

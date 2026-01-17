@@ -41,10 +41,6 @@ function renderAdsMedia($ad)
 }
 ?>
 
-<style>
-
-</style>
-
 <?php if (mysqli_num_rows($res_ads_top) > 0): ?>
     <div class="home-top-ads container">
         <div class="ads-slider" data-speed="5000">

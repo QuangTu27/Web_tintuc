@@ -19,7 +19,7 @@ if (isset($_POST['btn_add'])) {
                 VALUES ('$username', '$password', '$hoten', '$email', '$role')";
         mysqli_query($conn, $sql);
         header('Location: index.php?mod=user&act=list&msg=added');
-        exit();
+        exit;
     }
 }
 ?>

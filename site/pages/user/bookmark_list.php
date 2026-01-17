@@ -1,16 +1,11 @@
 <?php
-// BẮT BUỘC ĐĂNG NHẬP
 if (!isset($_SESSION['user_id'])) {
-    echo "<div class='container' style='padding:50px 0; text-align:center;'>
-            <h3>⚠️ Bạn cần đăng nhập để xem tin đã lưu</h3>
-            <a href='javascript:void(0)' onclick='openAuthModal(\"login\")' style='color:#007bff; font-weight:bold;'>Đăng nhập ngay</a>
-          </div>";
+    echo "<div class='alert-box'>⚠️ Vui lòng đăng nhập để xem tin đã lưu.</div>";
     return;
 }
 
 $user_id = $_SESSION['user_id'];
 
-// JOIN bảng news và bookmarks
 $sql = "SELECT n.*, b.ngay_luu 
         FROM tbl_bookmarks b
         JOIN tbl_news n ON b.news_id = n.id

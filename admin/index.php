@@ -5,12 +5,12 @@ include '../connect.php';
 if (isset($_GET['act']) && $_GET['act'] == 'logout') {
     session_destroy();
     header('location: login.php');
-    exit();
+    exit;
 }
 
 if (!isset($_SESSION['admin_login'])) {
     header('location: login.php');
-    exit();
+    exit;
 }
 
 include 'header_admin.php';

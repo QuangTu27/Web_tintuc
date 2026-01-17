@@ -17,9 +17,6 @@ if (mysqli_num_rows($result) == 0) {
 
 $ads = mysqli_fetch_assoc($result);
 
-/* =========================
-   XỬ LÝ SUBMIT UPDATE
-========================= */
 if (isset($_POST['btn_update'])) {
     $title    = mysqli_real_escape_string($conn, trim($_POST['title']));
     $link     = mysqli_real_escape_string($conn, trim($_POST['link']));

@@ -1,4 +1,4 @@
-/* Modal Overlay (Nền tối) */
+/* Modal Overlay */
 .modal-overlay {
   display: none; /* Mặc định ẩn */
   position: fixed;
@@ -12,7 +12,7 @@
   align-items: center;
 }
 
-/* Hộp nội dung (Màu trắng) */
+/* Hộp nội dung */
 .modal-content {
   background: #fff;
   width: 420px;
@@ -34,7 +34,6 @@
   }
 }
 
-/* Nút tắt X */
 .close-btn {
   position: absolute;
   top: 10px;
@@ -60,7 +59,7 @@
   font-size: 16px;
 }
 .tab-item.active {
-  color: #00b686; /* Màu xanh giống Dân Trí */
+  color: #00b686;
   border-bottom: 2px solid #00b686;
   margin-bottom: -2px;
 }
@@ -91,7 +90,6 @@
   outline: none;
 }
 
-/* Nút Submit */
 .btn-submit {
   width: 100%;
   padding: 12px;

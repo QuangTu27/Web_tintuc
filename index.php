@@ -1,24 +1,16 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 session_start();
 ob_start();
 include 'connect.php';
 
 //xử lý đăng xuất
 if (isset($_GET['act']) && $_GET['act'] == 'logout') {
-    // Xóa tất cả các biến session
     session_unset();
-
-    // Hủy phiên làm việc hoàn toàn
     session_destroy();
-
-    // Thông báo và chuyển hướng về trang chủ
     header('Location: /Web_tintuc/index.php');
-    exit();
+    exit;
 }
 
-// 1. Gọi Header
 include 'site/header.php';
 
 //mapping url
@@ -33,16 +25,14 @@ $routes = [
 
     'thongtincanhan' => 'site/pages/user/thongtincanhan.php',
     'my_comments'    => 'site/pages/user/my_comments.php',
-    'tin_da_luu'     => 'site/pages/user/tin_da_luu.php',
+    'tin_da_luu'     => 'site/pages/user/bookmark_list.php',
     'tin_da_xem'     => 'site/pages/user/tin_da_xem.php',
 
     'bookmark_add'   => 'site/pages/bookmark/bookmark_add.php',
     'bookmark_delete' => 'site/pages/bookmark/bookmark_delete.php',
-    'bookmark_list'  => 'site/pages/bookmark/bookmark_list.php',
 ];
 
-// 2. Điều hướng nội dung (Router đơn giản)
-// Mặc định vào trang home
+// 2. Điều hướng 
 $page = $_GET['p'] ?? 'home';
 
 if (isset($routes[$page]) && file_exists($routes[$page])) {
@@ -51,5 +41,4 @@ if (isset($routes[$page]) && file_exists($routes[$page])) {
     include 'site/pages/404.php';
 }
 
-// 3. Gọi Footer
 include 'site/footer.php';

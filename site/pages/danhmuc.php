@@ -1,169 +1,76 @@
 <?php
-// 1. KẾT NỐI & LẤY ID
-if (!isset($conn)) include_once($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
-
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-// 2. LẤY THÔNG TIN DANH MỤC HIỆN TẠI
-$sql_cat = "SELECT * FROM tbl_categories WHERE id = $id";
-$res_cat = mysqli_query($conn, $sql_cat);
-$current_cat = mysqli_fetch_assoc($res_cat);
-
-if (!$current_cat) {
-    echo "<div class='container' style='padding:50px; text-align:center;'><h3>❌ Danh mục không tồn tại!</h3></div>";
-    return;
+// 1. KẾT NỐI & TỐI ƯU TRUY VẤN
+if (!isset($conn)) {
+    $path_connect = $_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php';
+    if (file_exists($path_connect)) include_once $path_connect;
 }
 
-// --- LOGIC XỬ LÝ HEADER DANH MỤC ---
-$parent_id = 0;
-$parent_name = "";
-$parent_link_id = 0;
-$sub_categories = [];
-
-if ($current_cat['parent_id'] == 0) {
-    // A. Nếu đang xem Danh mục CHA
-    $parent_id = $id;
-    $parent_name = $current_cat['name'];
-    $parent_link_id = $id;
-    $sql_sub = "SELECT * FROM tbl_categories WHERE parent_id = $id ORDER BY id ASC";
-} else {
-    // B. Nếu đang xem Danh mục CON
-    $parent_id = $current_cat['parent_id'];
-    $sql_parent = "SELECT * FROM tbl_categories WHERE id = $parent_id";
-    $res_parent = mysqli_query($conn, $sql_parent);
-    $row_parent = mysqli_fetch_assoc($res_parent);
-
-    $parent_name = $row_parent['name'];
-    $parent_link_id = $row_parent['id'];
-    $sql_sub = "SELECT * FROM tbl_categories WHERE parent_id = $parent_id ORDER BY id ASC";
-}
-
-$res_sub = mysqli_query($conn, $sql_sub);
-while ($sub = mysqli_fetch_assoc($res_sub)) {
-    $sub_categories[] = $sub;
-}
-
-// 3. LOGIC LẤY TIN
-if ($current_cat['parent_id'] == 0) {
-    $list_cat_ids = [$id];
-    foreach ($sub_categories as $sub) {
-        $list_cat_ids[] = $sub['id'];
-    }
-    $str_ids = implode(',', $list_cat_ids);
-} else {
-    $str_ids = $id;
-}
-
-// 4. PHÂN TRANG & QUERY TIN
-$limit = 10;
-$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-if ($page < 1) $page = 1;
+// 2. CẤU HÌNH PHÂN TRANG (Giảm limit xuống để load nhanh hơn)
+$limit = 10; 
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $start = ($page - 1) * $limit;
 
-$sql_count = "SELECT COUNT(id) as total FROM tbl_news WHERE category_id IN ($str_ids) AND trangthai='da_dang'";
-$res_count = mysqli_query($conn, $sql_count);
-$row_count = mysqli_fetch_assoc($res_count);
-$total_records = $row_count['total'];
+// 3. TỐI ƯU SQL: Chỉ lấy các cột cần thiết thay vì SELECT *
+// Điều này giúp giảm tải bộ nhớ RAM và băng thông database
+$sql_fields = "n.id, n.tieude, n.tomtat, n.hinhanh, n.ngaydang, n.view_count, c.name as cat_name";
+
+// Lấy tổng số tin (Sử dụng COUNT(id) trên cột có index)
+$res_count = mysqli_query($conn, "SELECT COUNT(id) as total FROM tbl_news WHERE trangthai='da_dang'");
+$total_records = mysqli_fetch_assoc($res_count)['total'];
 $total_pages = ceil($total_records / $limit);
 
-$sql_news = "SELECT * FROM tbl_news 
-             WHERE category_id IN ($str_ids) AND trangthai='da_dang' 
-             ORDER BY ngaydang DESC 
+// Truy vấn lấy tin: Thêm INDEX nếu có thể trong Database cho cột 'trangthai' và 'ngaydang'
+$sql_news = "SELECT $sql_fields 
+             FROM tbl_news n
+             LEFT JOIN tbl_categories c ON n.category_id = c.id
+             WHERE n.trangthai='da_dang' 
+             ORDER BY n.ngaydang DESC 
              LIMIT $start, $limit";
 $query_news = mysqli_query($conn, $sql_news);
-
-// 6. TIN XEM NHIỀU SIDEBAR
-$sql_top = "SELECT * FROM tbl_news WHERE trangthai='da_dang' ORDER BY view_count DESC LIMIT 5";
-$query_top = mysqli_query($conn, $sql_top);
 ?>
 
-<link rel="stylesheet" href="site/css/category.css?v=<?= time() ?>">
+<div class="container" style="max-width: 1100px; margin: 20px auto; padding: 0 15px;">
+    <h2 style="font-weight: 800; margin-bottom: 20px;">TIN MỚI NHẤT</h2>
 
-<div class="container" style="margin-top: 20px;">
-    <div class="cat-header-wrapper">
-        <h1 class="cat-title-large">
-            <a href="index.php?p=danhmuc&id=<?= $parent_link_id ?>" title="<?= $parent_name ?>">
-                <?= htmlspecialchars($parent_name) ?>
-            </a>
-        </h1>
-
-        <?php if (!empty($sub_categories)): ?>
-            <ul class="cat-sub-nav">
-                <?php foreach ($sub_categories as $sub):
-                    $isActive = ($sub['id'] == $id) ? 'active' : '';
-                ?>
-                    <li>
-                        <a href="index.php?p=danhmuc&id=<?= $sub['id'] ?>" class="<?= $isActive ?>">
-                            <?= htmlspecialchars($sub['name']) ?>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-    </div>
-</div>
-
-<div class="container main-wrapper" style="display: flex; gap: 30px; margin-top: 20px; max-width: 1200px; align-items: flex-start;">
-
-    <div class="content-area" style="flex: 2;">
-
-        <?php if ($total_records > 0): ?>
-            <div class="category-news-list">
-                <?php while ($row = mysqli_fetch_assoc($query_news)): ?>
-                    <div class="cat-news-item">
-                        <a href="index.php?p=chitiet_tintuc&id=<?= $row['id'] ?>" class="cat-thumb">
-                            <img src="images/news/<?= $row['hinhanh'] ?>" onerror="this.src='images/default_news.jpg'">
-                        </a>
-                        <div class="cat-info">
-                            <h3>
-                                <a href="index.php?p=chitiet_tintuc&id=<?= $row['id'] ?>">
-                                    <?= htmlspecialchars($row['tieude']) ?>
-                                </a>
-                            </h3>
-                            <p class="cat-sapo">
-                                <?= mb_substr(strip_tags($row['tomtat']), 0, 150, 'UTF-8') ?>...
-                            </p>
-                        </div>
-                    </div>
-                <?php endwhile; ?>
-            </div>
-
-            <?php if ($total_pages > 1): ?>
-                <div class="pagination">
-                    <?php
-                    if ($page > 1) echo '<a href="index.php?p=danhmuc&id=' . $id . '&page=' . ($page - 1) . '">«</a>';
-                    for ($i = 1; $i <= $total_pages; $i++) {
-                        $active = ($i == $page) ? 'active' : '';
-                        echo '<a href="index.php?p=danhmuc&id=' . $id . '&page=' . $i . '" class="' . $active . '">' . $i . '</a>';
-                    }
-                    if ($page < $total_pages) echo '<a href="index.php?p=danhmuc&id=' . $id . '&page=' . ($page + 1) . '">»</a>';
-                    ?>
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <?php while ($row = mysqli_fetch_assoc($query_news)): ?>
+            <article style="display: flex; gap: 20px; background: #fff; padding: 15px; border-radius: 8px; border-bottom: 1px solid #eee;">
+                <div style="flex: 0 0 240px; height: 150px;">
+                    <a href="index.php?p=chitiet_tintuc&id=<?= $row['id'] ?>">
+                        <img src="images/news/<?= $row['hinhanh'] ?>" 
+                             loading="lazy" 
+                             onerror="this.src='images/default_news.jpg'" 
+                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
+                    </a>
                 </div>
-            <?php endif; ?>
-
-        <?php else: ?>
-            <div style="padding: 30px; background: #f9f9f9; text-align: center; border-radius: 8px;">
-                <p>📭 Chưa có bài viết nào.</p>
-            </div>
-        <?php endif; ?>
+                
+                <div style="flex: 1;">
+                    <small style="color: #28a745; font-weight: bold;"><?= htmlspecialchars($row['cat_name']) ?></small>
+                    <h3 style="margin: 5px 0 10px 0; font-size: 20px;">
+                        <a href="index.php?p=chitiet_tintuc&id=<?= $row['id'] ?>" style="text-decoration: none; color: #222;">
+                            <?= htmlspecialchars($row['tieude']) ?>
+                        </a>
+                    </h3>
+                    <p style="color: #666; font-size: 14px; line-height: 1.5;">
+                        <?= mb_substr(strip_tags($row['tomtat']), 0, 160, 'UTF-8') ?>...
+                    </p>
+                    <div style="margin-top: 10px; font-size: 12px; color: #999;">
+                        <span>📅 <?= date('d/m/Y', strtotime($row['ngaydang'])) ?></span>
+                        <span style="margin-left: 15px;">👁️ <?= number_format($row['view_count']) ?> lượt xem</span>
+                    </div>
+                </div>
+            </article>
+        <?php endwhile; ?>
     </div>
 
-    <aside style="flex: 0 0 300px; max-width: 300px; position: sticky; top: 20px;">
-        <div style="border: 1px solid #eee; border-radius: 4px; overflow: hidden;">
-            <h3 style="background: #f7f7f7; color: #333; padding: 10px 15px; margin: 0; font-size: 14px; text-transform: uppercase; border-bottom: 1px solid #eee; font-weight: bold;">
-                Đọc nhiều
-            </h3>
-            <div style="padding: 15px; background: #fff;">
-                <?php while ($top = mysqli_fetch_assoc($query_top)): ?>
-                    <div style="display: flex; gap: 10px; margin-bottom: 15px; align-items: flex-start; border-bottom: 1px dashed #eee; padding-bottom: 10px;">
-                        <img src="images/news/<?= $top['hinhanh'] ?>" style="width: 70px; height: 50px; object-fit: cover; flex-shrink: 0;" onerror="this.src='images/default_news.jpg'">
-                        <a href="index.php?p=chitiet_tintuc&id=<?= $top['id'] ?>" style="font-size: 13px; text-decoration: none; color: #333; font-weight: 500; line-height: 1.4;">
-                            <?= mb_substr($top['tieude'], 0, 50, 'UTF-8') ?>...
-                        </a>
-                    </div>
-                <?php endwhile; ?>
-            </div>
+    <?php if ($total_pages > 1): ?>
+        <div style="text-align: center; margin: 30px 0;">
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <a href="index.php?page=<?= $i ?>" 
+                   style="display: inline-block; padding: 8px 16px; margin: 0 4px; border: 1px solid #ddd; text-decoration: none; color: <?= ($i==$page)?'#fff':'#333' ?>; background: <?= ($i==$page)?'#28a745':'#fff' ?>;">
+                    <?= $i ?>
+                </a>
+            <?php endfor; ?>
         </div>
-    </aside>
-
+    <?php endif; ?>
 </div>

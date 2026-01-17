@@ -1,11 +1,9 @@
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
-// 1. LẤY DỮ LIỆU DANH MỤC
 $sql_cat = "SELECT * FROM tbl_categories ORDER BY id ASC";
 $res_cat = mysqli_query($conn, $sql_cat);
 
-// Đưa tất cả vào mảng để xử lý
 $menuItems = [];
 while ($row = mysqli_fetch_assoc($res_cat)) {
     $menuItems[] = $row;
@@ -23,14 +21,13 @@ function getSubCategories($items, $parentId)
     return $subs;
 }
 
-// Xử lý thông tin User
 $avatar = 'default_avatar.png';
 $displayName = 'Người dùng';
 $username = 'Guest';
 
 if (isset($_SESSION['user_login'])) {
     $u_id = $_SESSION['user_id'];
-    // Truy vấn lại thông tin mới nhất
+    // Lấy thông tin user từ DB
     $sql_user_info = "SELECT avatar, hoten, username FROM tbl_users WHERE id = $u_id";
     $res_user_info = mysqli_query($conn, $sql_user_info);
 
@@ -218,13 +215,13 @@ if (isset($_SESSION['user_login'])) {
         btnOpen.addEventListener('click', function(e) {
             e.preventDefault(); // Chặn chuyển trang
             overlay.classList.add('active');
-            body.style.overflow = 'hidden'; // Khóa cuộn trang web
+            body.style.overflow = 'hidden'; // ko cuộn trang web
         });
 
         // Đóng menu
         btnClose.addEventListener('click', function() {
             overlay.classList.remove('active');
-            body.style.overflow = ''; // Mở khóa cuộn
+            body.style.overflow = ''; // Mở cuộn
         });
 
         // Click ra ngoài khoảng trắng cũng đóng
@@ -255,6 +252,7 @@ if (isset($_SESSION['user_login'])) {
         });
     </script>
 
+    <!-- Script thời gian và thời tiết -->
     <script>
         function updateDateTime() {
             const now = new Date();

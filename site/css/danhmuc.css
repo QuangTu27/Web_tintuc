@@ -1,8 +1,3 @@
-/* =========================================
-   STYLE CHO TRANG DANH MỤC (CATEGORY)
-   ========================================= */
-
-/* --- 1. HEADER DANH MỤC KIỂU VNEXPRESS --- */
 .cat-header-wrapper {
   display: flex;
   align-items: baseline; /* Căn chân chữ cho đều */

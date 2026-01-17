@@ -1,14 +1,9 @@
 <?php
-// Bắt buộc khởi động session
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
-// =============================================================
-// 1. KIỂM TRA QUYỀN HẠN & LẤY ĐÚNG ID NGƯỜI DÙNG
-// =============================================================
-// Fix lỗi ID=0: Kiểm tra tất cả các trường hợp tên biến session
 if (isset($_SESSION['admin_id'])) {
     $current_user_id = $_SESSION['admin_id'];
 } elseif (isset($_SESSION['user_id'])) {
@@ -28,35 +23,24 @@ if (!$isAdmin && !$isEditor) {
     die("Bạn không có quyền truy cập.");
 }
 
-// =============================================================
-// 2. XỬ LÝ BỘ LỌC
-// =============================================================
-// Lấy danh sách danh mục (Chỉ lấy cha để lọc cho gọn)
+
 $sql_cats = "SELECT id, name FROM tbl_categories WHERE parent_id = 0 ORDER BY name ASC";
 $res_cats = mysqli_query($conn, $sql_cats);
 
 $filter_cat_id = isset($_GET['cat_id']) ? intval($_GET['cat_id']) : 0;
 $keyword       = isset($_GET['q']) ? trim($_GET['q']) : '';
 
-// =============================================================
-// 3. XÂY DỰNG CÂU TRUY VẤN
-// =============================================================
 $conditions = [];
 
-// A. LOGIC PHÂN QUYỀN (QUAN TRỌNG)
 if ($isEditor) {
-    // Editor thấy bài viết (và bình luận) nếu:
-    // 1. Quản lý trực tiếp danh mục của bài viết (cat.manager_id)
-    // 2. HOẶC Quản lý danh mục CHA của bài viết (parent_cat.manager_id)
+
     $conditions[] = "(cat.manager_id = $current_user_id OR parent_cat.manager_id = $current_user_id)";
 }
 
-// B. LOGIC LỌC THEO DANH MỤC
 if ($filter_cat_id > 0) {
     $conditions[] = "(n.category_id = $filter_cat_id OR cat.parent_id = $filter_cat_id)";
 }
 
-// C. TÌM KIẾM
 if ($keyword != '') {
     $search = mysqli_real_escape_string($conn, $keyword);
     $conditions[] = "n.tieude LIKE '%$search%'";
@@ -67,7 +51,6 @@ if (!empty($conditions)) {
     $where_sql = " WHERE " . implode(" AND ", $conditions);
 }
 
-// CÂU SQL CHÍNH
 $sql = "
     SELECT 
         n.id,

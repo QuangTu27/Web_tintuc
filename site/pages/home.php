@@ -1,8 +1,6 @@
 <?php
-// Kết nối CSDL
 if (!isset($conn)) include_once($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
-// --- LOGIC QUẢNG CÁO (GIỮ NGUYÊN) ---
 $sql_ads_top     = "SELECT * FROM tbl_ads WHERE position='top_home' AND status='hien'";
 $res_ads_top     = mysqli_query($conn, $sql_ads_top);
 
@@ -16,8 +14,8 @@ $sql_ads_footer  = "SELECT * FROM tbl_ads WHERE position='footer_home' AND statu
 $res_ads_footer  = mysqli_query($conn, $sql_ads_footer);
 
 
-// --- LOGIC PHÂN TRANG & TIN TỨC (ĐÃ KHÔI PHỤC PHÂN TRANG) ---
-$limit = 10; // Số tin mỗi trang
+
+$limit = 10;
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $start = ($page - 1) * $limit;
 
@@ -28,7 +26,7 @@ $row_total = mysqli_fetch_assoc($res_total);
 $total_records = $row_total['total'];
 $total_pages = ceil($total_records / $limit);
 
-// 2. Lấy tin tức có giới hạn (LIMIT)
+// 2. Lấy tin tức có giới hạn 
 $sql_news = "SELECT * FROM tbl_news 
              WHERE trangthai='da_dang' 
              ORDER BY ngaydang DESC 
@@ -39,9 +37,6 @@ $res_news = mysqli_query($conn, $sql_news);
 $sql_top_views = "SELECT * FROM tbl_news WHERE trangthai='da_dang' ORDER BY view_count DESC LIMIT 5";
 $res_top_views = mysqli_query($conn, $sql_top_views);
 
-/**
- * Hàm hỗ trợ hiển thị Media
- */
 function renderAdsMedia($ad)
 {
     $filePath = "images/ads/" . $ad['media_file'];

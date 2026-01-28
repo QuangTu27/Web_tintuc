@@ -1,4 +1,13 @@
+
+<a href="/Web_tintuc/crawler/vnexpress.php"
+   target="_blank"
+   class="btn btn-add"
+   onclick="return confirm('Lấy tin mới từ VnExpress?')">
+   🔄 Lấy tin tự động
+</a>
 <?php
+
+
 // Kết nối CSDL
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 

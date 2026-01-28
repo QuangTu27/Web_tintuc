@@ -1,10 +1,5 @@
 <?php
-<<<<<<< Updated upstream
-$host = "localhost";      // Server MySQL
-$user = "root";           // Tài khoản mặc định của XAMPP
-$pass = "";               // Mật khẩu để trống
-$dbname = "web_tintuc";     // Tên database bạn đã tạo
-=======
+
 $host   = "localhost";
 $user   = "root";
 $pass   = "";
@@ -12,9 +7,8 @@ $dbname = "web_tintuc";
 $port   = 3306;
 
 $conn = mysqli_connect($host, $user, $pass, $dbname, $port);
->>>>>>> Stashed changes
 
-$conn = mysqli_connect($host, $user, $pass, $dbname);
+//$conn = mysqli_connect($host, $user, $pass, $dbname);
 
 // Kiểm tra kết nối
 if (!$conn) {

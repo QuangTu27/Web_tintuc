@@ -136,20 +136,121 @@ if ($id > 0 && isset($_SESSION['user_id'])) {
                 </div>
             <?php else: ?>
                 <p style="background: #fff3cd; padding: 15px; border-radius: 4px; border: 1px solid #ffeeba;">
-                    Vui lòng <a href="index.php?p=dangnhap" style="font-weight: bold; color: #856404;">Đăng nhập</a> để tham gia bình luận.
+                    Vui lòng <a href="javascript:void(0)" onclick="openAuthModal('login')" style="font-weight: bold; color: #856404;">Đăng nhập</a> để tham gia bình luận.
                 </p>
             <?php endif; ?>
 
             <div id="comment-list">
                 <?php
-                $q_comm = mysqli_query($conn, "SELECT * FROM tbl_comments WHERE news_id = $id AND status = 1 ORDER BY ngaybinh DESC");
-                while ($c = mysqli_fetch_assoc($q_comm)): ?>
-                    <div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #f1f1f1;">
-                        <strong style="color: #28a745;"><?= htmlspecialchars($c['ten_nguoi_binh']) ?></strong>
-                        <small style="color: #bbb; margin-left: 10px;"><?= date('d/m/Y H:i', strtotime($c['ngaybinh'])) ?></small>
-                        <p style="margin: 8px 0; color: #333;"><?= nl2br(htmlspecialchars($c['noidung'])) ?></p>
+                $q_comm = mysqli_query($conn, "SELECT * FROM tbl_comments WHERE news_id = $id AND status IN (1,2) ORDER BY ngaybinh ASC");
+                $all_comments = [];
+                while ($row_c = mysqli_fetch_assoc($q_comm)) {
+                    $all_comments[] = $row_c;
+                }
+                
+                $parents = [];
+                $children = [];
+                foreach ($all_comments as $c) {
+                    if (empty($c['parent_id'])) {
+                        array_unshift($parents, $c);
+                    } else {
+                        if (!isset($children[$c['parent_id']])) {
+                            $children[$c['parent_id']] = [];
+                        }
+                        $children[$c['parent_id']][] = $c;
+                    }
+                }
+
+                foreach ($parents as $c): 
+                    $thoigian = date('d/m/Y H:i', strtotime($c['ngaybinh']));
+                ?>
+                    <div class="comment-item" id="comment-<?= $c['id'] ?>" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #f1f1f1;">
+                        <div class="comment-content">
+                            <strong style="color: #28a745;"><?= htmlspecialchars($c['ten_nguoi_binh']) ?></strong>
+                            <small style="color: #bbb; margin-left: 10px;"><?= $thoigian ?></small>
+                            <div class="comment-text" id="text-<?= $c['id'] ?>" style="margin: 8px 0; color: #333;">
+                                <?php if($c['status'] == 2): ?>
+                                    <em style="color: #999;">Bình luận này đã bị xoá.</em>
+                                <?php else: ?>
+                                    <?= nl2br(htmlspecialchars($c['noidung'])) ?>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <?php if($c['status'] == 1): ?>
+                            <div class="comment-actions" style="font-size: 13px; margin-top: 5px;">
+                                <?php if(isset($_SESSION['user_id'])): ?>
+                                <a href="javascript:void(0)" class="btn-reply" data-id="<?= $c['id'] ?>" style="color: #007bff; text-decoration: none; margin-right: 15px;"><i class="fas fa-reply"></i> Trả lời</a>
+                                <?php endif; ?>
+                                <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id'] == $c['user_id']): ?>
+                                    <a href="javascript:void(0)" class="btn-edit" data-id="<?= $c['id'] ?>" style="color: #888; text-decoration: none; margin-right: 15px;"><i class="fas fa-edit"></i> Sửa</a>
+                                    <a href="javascript:void(0)" class="btn-delete" data-id="<?= $c['id'] ?>" style="color: #dc3545; text-decoration: none;"><i class="fas fa-trash"></i> Xoá</a>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <div class="edit-form-wrap" id="edit-form-<?= $c['id'] ?>" style="display:none; margin-top: 10px;">
+                                <textarea class="edit-content" id="input-edit-<?= $c['id'] ?>" style="width: 100%; height: 60px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"><?= htmlspecialchars($c['noidung']) ?></textarea>
+                                <div style="margin-top: 5px;">
+                                    <button class="btn-save-edit" data-id="<?= $c['id'] ?>" style="background: #28a745; color: #fff; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 12px;">Lưu</button>
+                                    <button class="btn-cancel-edit" data-id="<?= $c['id'] ?>" style="background: #6c757d; color: #fff; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 12px;">Huỷ</button>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <div class="replies" id="replies-<?= $c['id'] ?>" style="margin-left: 40px; margin-top: 15px; border-left: 2px solid #eee; padding-left: 15px;">
+                            <?php 
+                            if(isset($children[$c['id']])) {
+                                foreach ($children[$c['id']] as $child): 
+                                    $time_child = date('d/m/Y H:i', strtotime($child['ngaybinh']));
+                            ?>
+                                <div class="comment-item" id="comment-<?= $child['id'] ?>" style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #eee;">
+                                    <div class="comment-content">
+                                        <strong style="color: #28a745;"><?= htmlspecialchars($child['ten_nguoi_binh']) ?></strong>
+                                        <small style="color: #bbb; margin-left: 10px;"><?= $time_child ?></small>
+                                        <div class="comment-text" id="text-<?= $child['id'] ?>" style="margin: 8px 0; color: #333;">
+                                            <?php if($child['status'] == 2): ?>
+                                                <em style="color: #999;">Bình luận này đã bị xoá.</em>
+                                            <?php else: ?>
+                                                <?= nl2br(htmlspecialchars($child['noidung'])) ?>
+                                            <?php endif; ?>
+                                        </div>
+                                        
+                                        <?php if($child['status'] == 1): ?>
+                                        <div class="comment-actions" style="font-size: 13px; margin-top: 5px;">
+                                            <?php if(isset($_SESSION['user_id'])): ?>
+                                            <a href="javascript:void(0)" class="btn-reply" data-id="<?= $c['id'] ?>" style="color: #007bff; text-decoration: none; margin-right: 15px;"><i class="fas fa-reply"></i> Trả lời</a>
+                                            <?php endif; ?>
+                                            <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id'] == $child['user_id']): ?>
+                                                <a href="javascript:void(0)" class="btn-edit" data-id="<?= $child['id'] ?>" style="color: #888; text-decoration: none; margin-right: 15px;"><i class="fas fa-edit"></i> Sửa</a>
+                                                <a href="javascript:void(0)" class="btn-delete" data-id="<?= $child['id'] ?>" style="color: #dc3545; text-decoration: none;"><i class="fas fa-trash"></i> Xoá</a>
+                                            <?php endif; ?>
+                                        </div>
+                                        
+                                        <div class="edit-form-wrap" id="edit-form-<?= $child['id'] ?>" style="display:none; margin-top: 10px;">
+                                            <textarea class="edit-content" id="input-edit-<?= $child['id'] ?>" style="width: 100%; height: 60px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"><?= htmlspecialchars($child['noidung']) ?></textarea>
+                                            <div style="margin-top: 5px;">
+                                                <button class="btn-save-edit" data-id="<?= $child['id'] ?>" style="background: #28a745; color: #fff; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 12px;">Lưu</button>
+                                                <button class="btn-cancel-edit" data-id="<?= $child['id'] ?>" style="background: #6c757d; color: #fff; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 12px;">Huỷ</button>
+                                            </div>
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php 
+                                endforeach;
+                            }
+                            ?>
+                        </div>
+                        
+                        <div class="reply-form-wrap" id="reply-form-<?= $c['id'] ?>" style="display:none; margin-top: 15px; margin-left: 40px;">
+                            <textarea class="reply-content" id="input-reply-<?= $c['id'] ?>" placeholder="Viết phản hồi..." style="width: 100%; height: 60px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+                            <div style="margin-top: 5px;">
+                                <button class="btn-submit-reply" data-parent="<?= $c['id'] ?>" data-news="<?= $id ?>" style="background: #007bff; color: #fff; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 12px;">Gửi trả lời</button>
+                                <button class="btn-cancel-reply" data-id="<?= $c['id'] ?>" style="background: #6c757d; color: #fff; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 12px;">Huỷ</button>
+                            </div>
+                        </div>
                     </div>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
             </div>
         </div>
         <button id="btn-share"
@@ -224,6 +325,133 @@ if ($id > 0 && isset($_SESSION['user_id'])) {
                     if (res.status === 'success') {
                         $('#comment-list').prepend(res.html);
                         $('#comment-content').val('');
+                    } else {
+                        alert(res.message);
+                    }
+                } catch (e) {
+                    console.error("Lỗi phản hồi:", data);
+                }
+            });
+        });
+
+        // Toggle Reply Form
+        $(document).on('click', '.btn-reply', function(e) {
+            e.preventDefault();
+            const id = $(this).data('id');
+            $('.reply-form-wrap').hide();
+            $('.edit-form-wrap').hide();
+            $('#text-' + id).show(); // Đảm bảo test hiện lại ở chỗ khác
+            $('#reply-form-' + id).show();
+            $('#input-reply-' + id).focus();
+        });
+
+        // Toggle Edit Form
+        $(document).on('click', '.btn-edit', function(e) {
+            e.preventDefault();
+            const id = $(this).data('id');
+            $('.reply-form-wrap').hide();
+            $('.edit-form-wrap').hide();
+            
+            // Hiện lại tất cả comment text bị ẩn
+            $('.comment-text').show();
+            
+            // Ẩn nội dung comment hiện tại
+            $('#text-' + id).hide();
+            $('#edit-form-' + id).show();
+            $('#input-edit-' + id).focus();
+        });
+
+        // Cancel Edit Form
+        $(document).on('click', '.btn-cancel-edit', function(e) {
+            e.preventDefault();
+            const id = $(this).data('id');
+            $('#edit-form-' + id).hide();
+            $('#text-' + id).show();
+        });
+
+        // Cancel Reply Form
+        $(document).on('click', '.btn-cancel-reply', function(e) {
+            e.preventDefault();
+            const id = $(this).data('id');
+            $('#reply-form-' + id).hide();
+        });
+
+        // Submit Reply
+        $(document).on('click', '.btn-submit-reply', function() {
+            const parentId = $(this).data('parent');
+            const newsId = $(this).data('news');
+            const content = $('#input-reply-' + parentId).val();
+            
+            if (content.trim() === '') {
+                alert('Vui lòng nhập nội dung trả lời!');
+                return;
+            }
+
+            $.post('site/pages/news/comment.php', {
+                news_id: newsId,
+                parent_id: parentId,
+                noidung: content
+            }, function(data) {
+                try {
+                    const res = JSON.parse(data);
+                    if (res.status === 'success') {
+                        $('#replies-' + parentId).append(res.html);
+                        $('#reply-form-' + parentId).hide();
+                        $('#input-reply-' + parentId).val('');
+                    } else {
+                        alert(res.message);
+                    }
+                } catch (e) {
+                    console.error("Lỗi phản hồi:", data);
+                }
+            });
+        });
+
+        // Save Edit
+        $(document).on('click', '.btn-save-edit', function() {
+            const id = $(this).data('id');
+            const content = $('#input-edit-' + id).val();
+            
+            if (content.trim() === '') {
+                alert('Vui lòng nhập nội dung!');
+                return;
+            }
+
+            $.post('site/pages/news/comment_action.php', {
+                action: 'edit',
+                comment_id: id,
+                noidung: content
+            }, function(data) {
+                try {
+                    const res = JSON.parse(data);
+                    if (res.status === 'success') {
+                        $('#text-' + id).html(res.noidung).show();
+                        $('#edit-form-' + id).hide();
+                    } else {
+                        alert(res.message);
+                    }
+                } catch (e) {
+                    console.error("Lỗi phản hồi:", data);
+                }
+            });
+        });
+
+        // Delete
+        $(document).on('click', '.btn-delete', function(e) {
+            e.preventDefault();
+            if (!confirm('Bạn có chắc muốn xoá bình luận này?')) return;
+            
+            const id = $(this).data('id');
+            $.post('site/pages/news/comment_action.php', {
+                action: 'delete',
+                comment_id: id
+            }, function(data) {
+                try {
+                    const res = JSON.parse(data);
+                    if (res.status === 'success') {
+                        $('#text-' + id).html('<em style="color:#999;">Bình luận này đã bị xoá.</em>').show();
+                        $('#edit-form-' + id).hide();
+                        $('#comment-' + id + ' .comment-actions').hide();
                     } else {
                         alert(res.message);
                     }

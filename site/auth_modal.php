@@ -55,7 +55,15 @@
                 <div class="input-group">
                     <label>MẬT KHẨU *</label>
                     <div class="password-field">
-                        <input type="password" name="password" placeholder="Nhập mật khẩu" required>
+                        <input type="password" name="password" id="reg-password" placeholder="Nhập mật khẩu" required>
+                        <i class="far fa-eye toggle-password"></i>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>NHẬP LẠI MẬT KHẨU *</label>
+                    <div class="password-field">
+                        <input type="password" name="confirm_password" id="reg-confirm-password" placeholder="Nhập lại mật khẩu" required>
                         <i class="far fa-eye toggle-password"></i>
                     </div>
                 </div>
@@ -72,6 +80,20 @@
 </html>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const registerForm = document.getElementById('register-form');
+        if(registerForm) {
+            registerForm.addEventListener('submit', function(e) {
+                const password = document.getElementById('reg-password').value;
+                const confirmPassword = document.getElementById('reg-confirm-password').value;
+                if (password !== confirmPassword) {
+                    e.preventDefault();
+                    alert('Mật khẩu nhập lại không khớp!');
+                }
+            });
+        }
+    });
+
     // Hàm mở Modal
     function openAuthModal(mode = 'login') {
         document.getElementById('auth-modal').style.display = 'flex';

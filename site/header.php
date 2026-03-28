@@ -61,7 +61,7 @@ if (isset($_SESSION['user_login'])) {
     <header id="siteHeader">
         <div class="top-bar">
             <div class="container top-bar-inner">
-                <a href="index.php" class="logo-top">TINTUC<span>24H</span></a>
+                <a href="index.php" class="logo-top">TINTUC<span>24/7</span></a>
 
                 <div class="weather-box">
                     <div class="date-location">

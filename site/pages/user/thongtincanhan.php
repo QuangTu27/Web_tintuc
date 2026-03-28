@@ -55,11 +55,17 @@ $show_pass_form = false;
 if (isset($_POST['btn_update_pass'])) {
     $pass_old = $_POST['pass_old'];
     $pass_new = $_POST['pass_new'];
+    $pass_new_confirm = $_POST['pass_new_confirm'];
 
     if ($pass_old == $user['password']) {
-        $sql_pass = "UPDATE tbl_users SET password = '$pass_new' WHERE id = $user_id";
-        mysqli_query($conn, $sql_pass);
-        echo "<script>alert('Đổi mật khẩu thành công! Vui lòng đăng nhập lại.'); window.location.href='index.php?act=logout';</script>";
+        if ($pass_new == $pass_new_confirm) {
+            $sql_pass = "UPDATE tbl_users SET password = '$pass_new' WHERE id = $user_id";
+            mysqli_query($conn, $sql_pass);
+            echo "<script>alert('Đổi mật khẩu thành công! Vui lòng đăng nhập lại.'); window.location.href='index.php?act=logout';</script>";
+        } else {
+            $error_pass_old = "Mật khẩu mới không khớp.";
+            $show_pass_form = true;
+        }
     } else {
         $error_pass_old = "Mật khẩu cũ không đúng";
         $show_pass_form = true;
@@ -236,6 +242,12 @@ $act = isset($_GET['act']) ? $_GET['act'] : 'general';
                                 <div class="password-wrapper">
                                     <input type="password" id="new_pass" name="pass_new" class="form-control" required>
                                     <span class="toggle-text" onclick="togglePassword('new_pass', this)">Ẩn</span>
+                                </div>
+
+                                <label class="form-label">Xác nhận mật khẩu mới</label>
+                                <div class="password-wrapper">
+                                    <input type="password" id="new_pass_confirm" name="pass_new_confirm" class="form-control" required>
+                                    <span class="toggle-text" onclick="togglePassword('new_pass_confirm', this)">Ẩn</span>
                                 </div>
 
                                 <div class="flex-between">

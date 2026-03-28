@@ -8,6 +8,24 @@ $uid = $_SESSION['user_id'];
 $cookie_name = 'viewed_news_' . $uid;
 
 $viewed_ids = isset($_COOKIE[$cookie_name]) ? json_decode($_COOKIE[$cookie_name], true) : [];
+
+if (isset($_GET['del_viewed_news'])) {
+    $del_id = $_GET['del_viewed_news'];
+    if (($key = array_search($del_id, $viewed_ids)) !== false) {
+        unset($viewed_ids[$key]);
+        $viewed_ids = array_values($viewed_ids);
+        setcookie($cookie_name, json_encode($viewed_ids), time() + (86400 * 30), "/");
+        echo "<script>alert('Đã xóa thành công!'); window.location.href='index.php?p=thongtincanhan&act=tin_da_xem';</script>";
+        exit;
+    }
+}
+
+if (isset($_GET['del_all_viewed'])) {
+    setcookie($cookie_name, "", time() - 3600, "/");
+    echo "<script>alert('Đã xóa toàn bộ lịch sử xem tin!'); window.location.href='index.php?p=thongtincanhan&act=tin_da_xem';</script>";
+    exit;
+}
+
 $data_news = [];
 
 if (!empty($viewed_ids)) {
@@ -28,9 +46,21 @@ if (!empty($viewed_ids)) {
 }
 ?>
 <div>
-    <h3 style="border-left: 4px solid #00b686; padding-left: 10px; margin-bottom: 20px; color: #333;">
-        LỊCH SỬ XEM TIN
-    </h3>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="border-left: 4px solid #00b686; padding-left: 10px; margin: 0; color: #333;">
+            LỊCH SỬ XEM TIN
+        </h3>
+        
+        <?php if (!empty($data_news)): ?>
+            <a href="index.php?p=thongtincanhan&act=tin_da_xem&del_all_viewed=1" 
+                onclick="event.preventDefault(); if(confirm('Bạn có chắc chắn muốn xóa tất cả lịch sử xem tin?')) window.location.href=this.href;"
+                style="color: white; background: #dc3545; padding: 6px 15px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: 500; transition: 0.2s; box-shadow: 0 2px 4px rgba(220,53,69,0.2);"
+                onmouseover="this.style.background='#c82333';" 
+                onmouseout="this.style.background='#dc3545';">
+                <i class="fas fa-trash-alt"></i> Xóa tất cả
+            </a>
+        <?php endif; ?>
+    </div>
 
     <?php if (!empty($data_news)): ?>
         <div class="news-grid-system">
@@ -38,21 +68,26 @@ if (!empty($viewed_ids)) {
 
                 <div class="card-item">
                     <a href="index.php?p=chitiet_tintuc&id=<?= $row['id'] ?>" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
-
                         <div class="img-wrap">
                             <img src="images/news/<?= $row['hinhanh'] ?>" onerror="this.src='images/default_news.jpg'">
                             <span style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: #fff; font-size: 11px; padding: 3px 8px; border-radius: 4px;">
                                 <?= htmlspecialchars($row['cat_name'] ?? 'Tin tức') ?>
                             </span>
                         </div>
-
                         <div class="card-body">
                             <h4><?= htmlspecialchars($row['tieude']) ?></h4>
-
-                            <div style="margin-top: auto; padding-top: 10px; border-top: 1px dashed #eee; display: flex; justify-content: space-between; align-items: center; color: #888; font-size: 12px;">
-                                <span>📅 <?= date('d/m/Y', strtotime($row['ngaydang'])) ?></span>
-                            </div>
+                            <p style="font-size: 12px; color: #888; margin: 0; padding-top: 10px;">
+                                📅 <?= date('d/m/Y', strtotime($row['ngaydang'])) ?>
+                            </p>
                         </div>
+                    </a>
+
+                    <a href="index.php?p=thongtincanhan&act=tin_da_xem&del_viewed_news=<?= $row['id'] ?>"
+                        onclick="if(!confirm('Bạn muốn xóa lịch sử xem bài viết này?')) return false;"
+                        style="display:block; text-align:center; background:#fff5f5; color:#dc3545; padding:10px; font-size:13px; font-weight:600; text-decoration:none; border-top:1px solid #eee; transition: 0.2s;"
+                        onmouseover="this.style.background='#dc3545'; this.style.color='#fff';" 
+                        onmouseout="this.style.background='#fff5f5'; this.style.color='#dc3545';">
+                        <i class="fas fa-trash-alt"></i> Xóa
                     </a>
                 </div>
 

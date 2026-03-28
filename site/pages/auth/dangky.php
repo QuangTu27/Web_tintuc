@@ -7,6 +7,12 @@ if (isset($_POST['btn_register'])) {
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
     $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'] ?? '';
+
+    if ($password !== $confirm_password) {
+        echo "<script>alert('Mật khẩu nhập lại không khớp!'); window.history.back();</script>";
+        exit;
+    }
 
     $sql_check = "SELECT * FROM tbl_users WHERE username = '$username'";
     if (!empty($email)) {

@@ -112,9 +112,16 @@ if ($mod == 'dashboard') {
                                     <?= date('d/m/Y H:i', strtotime($row['ngaydang'])) ?>
                                 </td>
                                 <td style="padding: 12px 10px; border-bottom: 1px solid #eee;">
-                                    <a href="index.php?mod=tintuc&act=edit&id=<?= $row['id'] ?>"
-                                        style="padding: 5px 10px; background: #007bff; color: white; border-radius: 4px; text-decoration: none; font-size: 12px;">
-                                        Xem & Duyệt</a>
+                                    <a href="modules/tintuc/status.php?action=approve&id=<?= $row['id'] ?>"
+                                        onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này?');"
+                                        style="padding: 5px 10px; background: #28a745; color: white; border-radius: 4px; text-decoration: none; font-size: 12px; margin-right: 5px;">
+                                        <i class="fas fa-check"></i> Duyệt
+                                    </a>
+                                    <a href="modules/tintuc/delete.php?id=<?= $row['id'] ?>"
+                                        onclick="return confirm('Bạn có chắc chắn muốn xóa bài viết này để từ chối?');"
+                                        style="padding: 5px 10px; background: #dc3545; color: white; border-radius: 4px; text-decoration: none; font-size: 12px;">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </a>
                                 </td>
                             </tr>
                         <?php endwhile; ?>

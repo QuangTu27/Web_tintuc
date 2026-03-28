@@ -1,13 +1,12 @@
 <?php
-// Kết nối CSDL
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
 // Xử lý khi submit form
 if (isset($_POST['btn_add'])) {
-    $username = mysqli_real_escape_string($conn, $_POST['username']);
+    $username = $_POST['username'];
     $password = $_POST['password'];
-    $hoten    = mysqli_real_escape_string($conn, $_POST['hoten']);
-    $email    = mysqli_real_escape_string($conn, $_POST['email']);
+    $hoten    = $_POST['hoten'];
+    $email    = $_POST['email'];
     $role     = $_POST['role'];
 
     $check = "SELECT * FROM tbl_users WHERE username='$username'";
@@ -20,20 +19,15 @@ if (isset($_POST['btn_add'])) {
                 VALUES ('$username', '$password', '$hoten', '$email', '$role')";
         mysqli_query($conn, $sql);
         header('Location: index.php?mod=user&act=list&msg=added');
-        exit();
+        exit;
     }
 }
 ?>
 
 <div class="admin-container">
-    <div class="admin-header-inline">
-        <h2 class="admin-title" style="margin: 0; flex-grow: 1; text-align: center;">THÊM NGƯỜI DÙNG</h2>
-        <div style="width: 140px;"></div>
-    </div>
-
-    <?php if (isset($error)): ?>
-        <p class="form-error" style="color: #dc3545; background: #f8d7da; padding: 10px; border-radius: 4px;"><?= $error ?></p>
-    <?php endif; ?>
+    <h2 class="admin-title">
+        Thêm người dùng
+    </h2>
 
     <form method="post" class="admin-form">
         <div class="form-group">
@@ -68,9 +62,13 @@ if (isset($_POST['btn_add'])) {
             </select>
         </div>
 
-        <div class="btn-group-center" style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
-            <button type="submit" name="btn_add" class="btn btn-OK">💾 Lưu người dùng</button>
-            <a href="index.php?mod=user&act=list" class="btn btn-Cancel">❌ Huỷ</a>
+        <div class="btn-group-center">
+            <button type="submit" name="btn_add" class="btn btn-OK">
+                💾 Lưu người dùng
+            </button>
+            <a href="index.php?mod=user&act=list" class="btn btn-Cancel">
+                ❌ Huỷ
+            </a>
         </div>
     </form>
 </div>

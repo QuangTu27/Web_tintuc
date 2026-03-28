@@ -1,8 +1,7 @@
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
-// 1. XỬ LÝ LOGIC TÌM KIẾM
-$search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
+$search = isset($_GET['search']) ? $_GET['search'] : '';
 
 $sql = "SELECT * FROM tbl_users";
 if ($search != '') {

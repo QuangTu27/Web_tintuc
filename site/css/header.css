@@ -1,8 +1,5 @@
-/* =======================================================
-   1. CẤU TRÚC HEADER & HIỆU ỨNG CUỘN (STICKY)
-   ======================================================= */
 #header-placeholder {
-  height: 100px; /* Chiều cao ước lượng */
+  height: 100px;
   display: none;
 }
 
@@ -26,9 +23,6 @@ header.hide-top {
   transform: translateY(-50px); /* Ẩn Topbar khi cuộn xuống */
 }
 
-/* =======================================================
-   2. TOP BAR (LOGO + THỜI TIẾT + USER)
-   ======================================================= */
 .top-bar {
   height: 50px;
   background: #0a9e54; /* Màu chủ đạo Xanh */
@@ -62,7 +56,7 @@ header.hide-top {
   display: flex;
   align-items: center;
   gap: 15px;
-  color: #fff; /* Chữ màu trắng trên nền xanh */
+  color: #fff;
 }
 
 .date-location {
@@ -125,13 +119,11 @@ header.hide-top {
   margin: 0 5px;
 }
 
-/* =======================================================
-   3. NAV MENU (THANH DANH MỤC)
-   ======================================================= */
+/* Danh mục */
 .nav-menu-wrapper {
   height: 50px;
   background: #fff;
-  border-bottom: 2px solid #0a9e54; /* Viền xanh */
+  border-bottom: 2px solid #0a9e54;
 }
 
 .nav-inner {
@@ -173,10 +165,6 @@ header.hide-top {
   color: #0a9e54;
 }
 
-/* =======================================================
-   4. DROPDOWN MENU (MENU ĐA CẤP) - PHẦN MỚI THÊM
-   ======================================================= */
-
 /* Danh sách chính */
 .nav-categories ul {
   display: flex;
@@ -186,10 +174,9 @@ header.hide-top {
   gap: 20px;
 }
 
-/* Item cha: Cần relative để menu con bám theo */
 .nav-categories > ul > li {
   position: relative;
-  padding: 15px 0; /* Tăng vùng hover */
+  padding: 15px 0;
 }
 
 .nav-categories a {
@@ -209,69 +196,69 @@ header.hide-top {
 
 .nav-categories > ul > li {
   position: relative;
-  padding: 0; /* Reset padding */
+  padding: 0;
 }
 
 .nav-categories > ul > li > a {
-  padding: 0 10px; /* Padding cho link cấp 1 */
-  line-height: 50px; /* Căn giữa theo chiều cao header */
+  padding: 0 10px;
+  line-height: 50px;
 }
 
-/* --- MENU CON (SUB MENU) --- */
-/* Dùng selector cụ thể (.nav-categories ul.sub-menu) để đè style cũ */
+/* danh mục con */
 .nav-categories ul.sub-menu {
-  display: none !important; /* QUAN TRỌNG: Ép buộc ẩn */
+  display: none; /* Ẩn mặc định */
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 220px;
+  min-width: 240px;
   background: #fff;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-  border-top: 3px solid #0a9e54;
-  padding: 0 !important;
-  flex-direction: column !important;
+  border-top: 3px solid #00b686;
+  padding: 0;
+  margin: 0;
+  list-style: none;
   z-index: 9999;
   border-radius: 0 0 4px 4px;
-  opacity: 0; /* Ẩn hoàn toàn khỏi mắt */
-  visibility: hidden; /* Không nhận sự kiện chuột khi ẩn */
 }
-
-/* --- HIỆN MENU KHI DI CHUỘT (HOVER) --- */
 .nav-categories li:hover > ul.sub-menu {
-  display: flex !important; /* QUAN TRỌNG: Ép buộc hiện */
-  opacity: 1;
-  visibility: visible;
-  animation: fadeInUp 0.2s ease forwards; /* Chạy hiệu ứng */
+  display: block; /* Hiện ra */
+  animation: fadeInUp 0.2s ease forwards;
 }
 
-/* Item con */
+/*item con*/
 .nav-categories ul.sub-menu li {
+  display: block;
   width: 100%;
   margin: 0;
-  display: block; /* Đảm bảo item con nằm dọc */
+  padding: 0;
 }
 
-/* Link con */
 .nav-categories ul.sub-menu li a {
   display: block;
-  padding: 2px 20px;
-  line-height: normal;
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: none;
-  color: #333;
-  border-bottom: 1px solid #f1f1f1;
-  white-space: nowrap;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  text-decoration: none;
+  text-transform: uppercase;
+  border-bottom: 1px solid #eeeeee;
+  background-color: #fff;
+  transition: all 0.2s ease;
+  line-height: 1.4;
+  text-align: left;
 }
 
-/* Hover link con */
 .nav-categories ul.sub-menu li a:hover {
-  background: #f9f9f9;
-  color: #0a9e54;
+  background-color: #f9f9f9;
+  color: #00b686;
   padding-left: 25px;
 }
+/* Xóa border dưới cùng của item cuối */
+.nav-categories ul.sub-menu li:last-child a {
+  border-bottom: none;
+}
 
-/* Animation trượt lên nhẹ */
+/* Hiệu ứng trượt lên */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -283,23 +270,23 @@ header.hide-top {
   }
 }
 
-/* FULL MENU OVERLAY (MENU TOÀN TRANG) */
+/* menu full */
 #full-menu-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5); /* Nền tối mờ đằng sau */
+  background: rgba(0, 0, 0, 0.5);
   z-index: 10000; /* Nằm trên tất cả mọi thứ */
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Căn lên trên cùng */
-  overflow-y: auto; /* Cho phép cuộn nếu menu quá dài */
-  padding-top: 60px; /* Cách header một chút */
+  align-items: flex-start;
+  overflow-y: auto;
+  padding-top: 60px;
 }
 
 /* Khi có class active thì hiện lên */
@@ -310,12 +297,12 @@ header.hide-top {
 
 /* Hộp nội dung chính */
 #full-menu-overlay .container {
-  background: #f7f7f7; /* Màu xám nhạt giống VnExpress */
+  background: #f7f7f7;
   padding: 30px;
   border-radius: 4px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
   width: 100%;
-  max-width: 1140px; /* Giới hạn chiều rộng chuẩn */
+  max-width: 1140px;
   position: relative;
   top: -20px;
   transition: top 0.3s ease;
@@ -338,7 +325,7 @@ header.hide-top {
 .full-menu-header h3 {
   margin: 0;
   font-size: 18px;
-  color: #0a9e54; /* Màu xanh chủ đạo */
+  color: #0a9e54;
   text-transform: uppercase;
 }
 
@@ -361,18 +348,6 @@ header.hide-top {
   display: grid;
   grid-template-columns: repeat(5, 1fr); /* 5 cột đều nhau */
   gap: 30px;
-}
-
-/* Responsive: Thu nhỏ cột trên màn hình nhỏ */
-@media (max-width: 991px) {
-  .full-menu-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-@media (max-width: 576px) {
-  .full-menu-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 /* Cột danh mục */

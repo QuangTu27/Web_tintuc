@@ -4,7 +4,7 @@ body.login-page {
   align-items: center;
   height: 100vh;
   background: #f0f2f5;
-  font-family: "Segoe UI", sans-serif; /* Thêm font cho đẹp */
+  font-family: "Segoe UI", sans-serif;
 }
 
 .login-box {

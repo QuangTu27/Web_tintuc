@@ -11,7 +11,9 @@
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
 }
@@ -21,7 +23,7 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* QUAN TRỌNG: Quy định chiều cao khung ảnh cố định */
+/* Quy định chiều cao khung ảnh cố định */
 .img-wrap {
   height: 160px;
   /* Chiều cao cố định, ảnh sẽ không bị to quá */

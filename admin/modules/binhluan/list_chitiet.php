@@ -1,7 +1,6 @@
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
-/* ========= KIỂM TRA news_id ========= */
 if (!isset($_GET['news_id'])) {
     echo "<p>❌ Chưa chọn bài viết để xem bình luận</p>";
     exit;
@@ -9,12 +8,10 @@ if (!isset($_GET['news_id'])) {
 
 $news_id = (int)$_GET['news_id'];
 
-/* ========= LẤY TIÊU ĐỀ BÀI VIẾT ========= */
 $sql_news = "SELECT tieude FROM tbl_news WHERE id = $news_id";
 $res_news = mysqli_query($conn, $sql_news);
 $news = mysqli_fetch_assoc($res_news);
 
-/* ========= LẤY COMMENT THEO BÀI ========= */
 $sql = "SELECT *
         FROM tbl_comments
         WHERE news_id = $news_id
@@ -32,7 +29,6 @@ $res = mysqli_query($conn, $sql);
         </span>
     </h2>
 
-    <!-- ===== BẢNG CÓ SCROLL ===== -->
     <div class="table-scroll">
 
         <table class="admin-table">

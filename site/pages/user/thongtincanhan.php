@@ -1,11 +1,9 @@
 <?php
-// KIỂM TRA ĐĂNG NHẬP
 if (!isset($_SESSION['user_login'])) {
     echo "<script>window.location.href='index.php';</script>";
     exit;
 }
 
-// LẤY THÔNG TIN USER
 $user_id = $_SESSION['user_id'];
 $sql = "SELECT * FROM tbl_users WHERE id = $user_id";
 $result = mysqli_query($conn, $sql);
@@ -15,9 +13,6 @@ $user = mysqli_fetch_assoc($result);
 $avatar_img = !empty($user['avatar']) ? $user['avatar'] : 'default.png';
 $join_date = date('m/Y', strtotime($user['created_at']));
 
-// XỬ LÝ CẬP NHẬT DỮ LIỆU
-
-// A. Cập nhật Avatar
 if (isset($_POST['btn_update_avatar'])) {
     if (!empty($_FILES['avatar_file']['name'])) {
         $avatar_name = time() . '_' . $_FILES['avatar_file']['name'];
@@ -29,11 +24,10 @@ if (isset($_POST['btn_update_avatar'])) {
         $_SESSION['user_avatar'] = $avatar_name;
 
         echo "<script>window.location.href='index.php?p=thongtincanhan';</script>";
-        exit();
+        exit;
     }
 }
 
-// B. Cập nhật Họ tên
 if (isset($_POST['btn_update_name'])) {
     $new_name = trim($_POST['hoten']);
     if (!empty($new_name)) {
@@ -44,7 +38,6 @@ if (isset($_POST['btn_update_name'])) {
     }
 }
 
-// C. Cập nhật Email
 if (isset($_POST['btn_update_email'])) {
     $new_email = trim($_POST['new_email']);
     $check_exist = mysqli_query($conn, "SELECT id FROM tbl_users WHERE email = '$new_email' AND id != $user_id");
@@ -57,43 +50,36 @@ if (isset($_POST['btn_update_email'])) {
     }
 }
 
-// D. Cập nhật Mật khẩu
 $error_pass_old = "";
 $show_pass_form = false;
-
 if (isset($_POST['btn_update_pass'])) {
     $pass_old = $_POST['pass_old'];
     $pass_new = $_POST['pass_new'];
+    $pass_new_confirm = $_POST['pass_new_confirm'];
 
     if ($pass_old == $user['password']) {
-        $sql_pass = "UPDATE tbl_users SET password = '$pass_new' WHERE id = $user_id";
-        mysqli_query($conn, $sql_pass);
-        echo "<script>alert('Đổi mật khẩu thành công! Vui lòng đăng nhập lại.'); window.location.href='index.php?act=logout';</script>";
+        if ($pass_new == $pass_new_confirm) {
+            $sql_pass = "UPDATE tbl_users SET password = '$pass_new' WHERE id = $user_id";
+            mysqli_query($conn, $sql_pass);
+            echo "<script>alert('Đổi mật khẩu thành công! Vui lòng đăng nhập lại.'); window.location.href='index.php?act=logout';</script>";
+        } else {
+            $error_pass_old = "Mật khẩu mới không khớp.";
+            $show_pass_form = true;
+        }
     } else {
         $error_pass_old = "Mật khẩu cũ không đúng";
         $show_pass_form = true;
     }
 }
 
-// XÁC ĐỊNH TAB HIỆN TẠI 
-$act = isset($_GET['act']) ? $_GET['act'] : 'general'; // Mặc định là 'general' (Thông tin chung)
+$act = isset($_GET['act']) ? $_GET['act'] : 'general';
 ?>
-
 <link rel="stylesheet" href="/Web_tintuc/site/css/profile.css">
-
 <div class="container profile-container">
-
     <div class="profile-sidebar">
         <div class="user-card">
             <div class="user-card-header">
-                <?php if ($user['avatar']): ?>
-                    <img src="/Web_tintuc/images/avatars/<?= $avatar_img ?>" class="avatar-circle">
-                <?php else: ?>
-                    <div class="avatar-circle">
-                        <?= strtoupper(substr($user['username'], 0, 1)) ?>
-                    </div>
-                <?php endif; ?>
-
+                <img src="/Web_tintuc/images/avatars/<?= $avatar_img ?>" class="avatar-circle">
                 <div class="user-meta">
                     <h4><?= htmlspecialchars($user['username']) ?></h4>
                     <span>Tham gia từ <?= $join_date ?></span>
@@ -106,7 +92,7 @@ $act = isset($_GET['act']) ? $_GET['act'] : 'general'; // Mặc định là 'gen
                 </li>
 
                 <li class="<?= ($act == 'my_comments') ? 'active' : '' ?>">
-                    <a href="index.php?p=thongtincanhan&act=my_comments">Ý kiến của bạn (0)</a>
+                    <a href="index.php?p=thongtincanhan&act=my_comments">Ý kiến của bạn</a>
                 </li>
 
                 <li class="<?= ($act == 'bookmark_list') ? 'active' : '' ?>">
@@ -130,26 +116,24 @@ $act = isset($_GET['act']) ? $_GET['act'] : 'general'; // Mặc định là 'gen
     </div>
 
     <div class="profile-content">
-
         <?php
         switch ($act) {
             case 'bookmark_list':
-                // Gọi file tin đã lưu vào đây
                 include 'bookmark_list.php';
                 break;
 
             case 'tin_da_xem':
-                // Gọi file tin đã xem vào đây
                 include 'tin_da_xem.php';
                 break;
 
             case 'my_comments':
-                echo "<h3>Chức năng bình luận đang phát triển...</h3>";
+                include 'my_comments.php';
                 break;
 
             case 'general':
             default:
-                // HIỂN THỊ FORM THÔNG TIN CHUNG (Code cũ của bạn)
+
+                // thông tin chung
         ?>
                 <div class="profile-content">
                     <h2 class="page-title">Thông tin tài khoản</h2>
@@ -197,7 +181,8 @@ $act = isset($_GET['act']) ? $_GET['act'] : 'general'; // Mặc định là 'gen
                             </div>
                             <form method="POST" class="normal-edit-box">
                                 <label class="form-label">Nhập họ tên</label>
-                                <input type="text" name="hoten" class="form-control" value="<?= htmlspecialchars($user['hoten']) ?>" placeholder="Nhập họ và tên">
+                                <input type="text" name="hoten" class="form-control"
+                                    value="<?= htmlspecialchars($user['hoten']) ?>" placeholder="Nhập họ và tên">
                                 <button type="submit" name="btn_update_name" class="btn-save">Đổi tên</button>
                             </form>
                         </div>
@@ -220,7 +205,8 @@ $act = isset($_GET['act']) ? $_GET['act'] : 'general'; // Mặc định là 'gen
                             </div>
                             <form method="POST" class="normal-edit-box">
                                 <label class="form-label">Nhập email mới</label>
-                                <input type="email" name="new_email" class="form-control" value="<?= $user['email'] ?>" placeholder="Nhập email mới" required>
+                                <input type="email" name="new_email" class="form-control"
+                                    value="<?= $user['email'] ?>" placeholder="Nhập email mới" required>
                                 <button type="submit" name="btn_update_email" class="btn-save">Đổi email</button>
                             </form>
                         </div>
@@ -256,6 +242,12 @@ $act = isset($_GET['act']) ? $_GET['act'] : 'general'; // Mặc định là 'gen
                                 <div class="password-wrapper">
                                     <input type="password" id="new_pass" name="pass_new" class="form-control" required>
                                     <span class="toggle-text" onclick="togglePassword('new_pass', this)">Ẩn</span>
+                                </div>
+
+                                <label class="form-label">Xác nhận mật khẩu mới</label>
+                                <div class="password-wrapper">
+                                    <input type="password" id="new_pass_confirm" name="pass_new_confirm" class="form-control" required>
+                                    <span class="toggle-text" onclick="togglePassword('new_pass_confirm', this)">Ẩn</span>
                                 </div>
 
                                 <div class="flex-between">

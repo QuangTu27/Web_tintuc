@@ -1,13 +1,9 @@
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . '/Web_tintuc/connect.php');
 
-// =================================================================
-// 1. LẤY DỮ LIỆU DANH MỤC & XỬ LÝ ĐA CẤP
-// =================================================================
 $sql_cat = "SELECT * FROM tbl_categories ORDER BY id ASC";
 $res_cat = mysqli_query($conn, $sql_cat);
 
-// Đưa tất cả vào mảng để xử lý
 $menuItems = [];
 while ($row = mysqli_fetch_assoc($res_cat)) {
     $menuItems[] = $row;
@@ -25,14 +21,13 @@ function getSubCategories($items, $parentId)
     return $subs;
 }
 
-// Xử lý thông tin User
 $avatar = 'default_avatar.png';
 $displayName = 'Người dùng';
 $username = 'Guest';
 
 if (isset($_SESSION['user_login'])) {
     $u_id = $_SESSION['user_id'];
-    // Truy vấn lại thông tin mới nhất
+    // Lấy thông tin user từ DB
     $sql_user_info = "SELECT avatar, hoten, username FROM tbl_users WHERE id = $u_id";
     $res_user_info = mysqli_query($conn, $sql_user_info);
 
@@ -54,7 +49,6 @@ if (isset($_SESSION['user_login'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang tin tức 24H</title>
     <link rel="stylesheet" href="/Web_tintuc/site/css/main.css">
-    <link rel="stylesheet" href="/Web_tintuc/site/css/header.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 
@@ -67,7 +61,7 @@ if (isset($_SESSION['user_login'])) {
     <header id="siteHeader">
         <div class="top-bar">
             <div class="container top-bar-inner">
-                <a href="index.php" class="logo-top">TINTUC<span>24H</span></a>
+                <a href="index.php" class="logo-top">TINTUC<span>24/7</span></a>
 
                 <div class="weather-box">
                     <div class="date-location">
@@ -168,7 +162,7 @@ if (isset($_SESSION['user_login'])) {
                 </nav>
 
                 <a href="javascript:void(0)" id="btnOpenMenu" class="nav-btn-all">
-                    <i class="fas fa-bars"></i>
+                    <i class="fas fa-bars" title="Tất cả chuyên mục"></i>
                 </a>
 
     </header>
@@ -221,13 +215,13 @@ if (isset($_SESSION['user_login'])) {
         btnOpen.addEventListener('click', function(e) {
             e.preventDefault(); // Chặn chuyển trang
             overlay.classList.add('active');
-            body.style.overflow = 'hidden'; // Khóa cuộn trang web
+            body.style.overflow = 'hidden'; // ko cuộn trang web
         });
 
         // Đóng menu
         btnClose.addEventListener('click', function() {
             overlay.classList.remove('active');
-            body.style.overflow = ''; // Mở khóa cuộn
+            body.style.overflow = ''; // Mở cuộn
         });
 
         // Click ra ngoài khoảng trắng cũng đóng
@@ -258,6 +252,7 @@ if (isset($_SESSION['user_login'])) {
         });
     </script>
 
+    <!-- Script thời gian và thời tiết -->
     <script>
         function updateDateTime() {
             const now = new Date();

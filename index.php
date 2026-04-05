@@ -19,6 +19,7 @@ $routes = [
     'tintuc'         => 'site/pages/news/tintuc.php',
     'chitiet_tintuc' => 'site/pages/news/chitiet_tintuc.php',
     'danhmuc'        => 'site/pages/danhmuc.php',
+    'timkiem'        => 'site/pages/timkiem.php',
 
     'dangky'         => 'site/pages/auth/dangky.php',
     'dangnhap'       => 'site/pages/auth/dangnhap.php',

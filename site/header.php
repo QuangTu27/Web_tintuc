@@ -74,8 +74,15 @@ if (isset($_SESSION['user_login'])) {
                         <span class="temp" id="temperature">--°C</span>
                     </div>
                 </div>
-
                 <div class="flex-spacer"></div>
+
+                <div class="search-box" style="margin-right: 20px;">
+                    <form action="index.php" method="GET" style="display: flex; align-items: center; background: #fff; border: 1px solid #ccc; border-radius: 20px; padding: 4px 15px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+                        <input type="hidden" name="p" value="timkiem">
+                        <input type="text" name="q" placeholder="Tìm kiếm tin tức..." required style="border: none; background: transparent; outline: none; font-size: 14px; width: 180px; padding: 2px 5px;">
+                        <button type="submit" style="border: none; background: transparent; color: #888; cursor: pointer; padding: 0;"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
 
                 <div class="user-action">
                     <?php if (isset($_SESSION['user_login'])): ?>
@@ -165,6 +172,8 @@ if (isset($_SESSION['user_login'])) {
                     <i class="fas fa-bars" title="Tất cả chuyên mục"></i>
                 </a>
 
+            </div>
+        </div>
     </header>
 
     <div id="full-menu-overlay">

@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; 2026 Web Tintuc - Design by Group 5 - 74DCTT22.
+            &copy; 2026 Web Tintuc24/7 - Design by Group 5 - 74DCTT22.
         </div>
     </div>
 </footer>

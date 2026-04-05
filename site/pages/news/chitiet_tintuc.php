@@ -24,10 +24,12 @@ if ($id > 0 && isset($conn)) {
     // Truy vấn lấy chi tiết + danh mục
     $sql = "SELECT n.*, 
                    c1.name as cat_name, c1.id as cat_id,
-                   c2.name as parent_name, c2.id as parent_id
+                   c2.name as parent_name, c2.id as parent_id,
+                   u.hoten as author_name
             FROM tbl_news n 
             LEFT JOIN tbl_categories c1 ON n.category_id = c1.id 
             LEFT JOIN tbl_categories c2 ON c1.parent_id = c2.id 
+            LEFT JOIN tbl_users u ON n.author_id = u.id
             WHERE n.id = $id LIMIT 1";
 
     $query = mysqli_query($conn, $sql);
@@ -73,6 +75,7 @@ if ($id > 0 && isset($_SESSION['user_id'])) {
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 25px;">
             <div style="color: #999; font-size: 13px;">
                 <span style="margin-right: 15px;">📅 <?= date('d/m/Y - H:i', strtotime($row['ngaydang'])) ?></span>
+                <span style="margin-right: 15px;"><i class="fas fa-user-edit"></i> <?= htmlspecialchars($row['author_name'] ?? 'Ẩn danh') ?></span>
                 <span>👁️ <?= number_format($row['view_count']) ?> lượt xem</span>
             </div>
 
